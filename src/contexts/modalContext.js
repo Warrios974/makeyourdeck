@@ -6,7 +6,7 @@ export const ModalContext = createContext();
 export function ModalContextProvider(props) {
 
     const [modalState, setModalState] = useState({
-        signInModal : true
+        signInModal : false
     })
 
     //Fermer ou ouvrir les modales
