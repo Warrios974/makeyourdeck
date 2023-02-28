@@ -1,0 +1,32 @@
+.modal{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &__overlay{
+        background-color: lighten($color: #000000, $amount: 0);
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        z-index: 1;
+    }
+    &__containe{
+        background-color: white;
+        width: 25rem;
+        width: 20rem;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        z-index: 2;
+    }
+    &__header{
+        &__title{
+
+        }
+    }
+    &__body{
+        
+    }
+}

@@ -1,0 +1,15 @@
+.header{
+    z-index: 2;
+    background-color: black;
+    position: fixed;
+    display: flex;
+    align-items: flex-start;
+    width: 5rem;
+    height: 100%;
+    &__navbar{
+        color: white;
+        display: flex;
+        flex-direction: column-reverse;
+        width: 100%;
+    }
+}
