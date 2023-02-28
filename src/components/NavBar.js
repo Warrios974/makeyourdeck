@@ -1,6 +1,11 @@
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faHouse, faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { ModalContext } from '../contexts/modalContext'
+
+library.add(faHouse, faWandMagicSparkles)
 
 function NavBar() {
 
@@ -10,7 +15,10 @@ function NavBar() {
     <nav className='header__navbar'>
       <div className='header__navigation'>
         <Link to="/">
-            Accueil
+          <FontAwesomeIcon icon="fa-solid fa-house" size='lg'/>
+        </Link>
+        <Link to="/spoiler">
+        <FontAwesomeIcon icon="fa-solid fa-wand-magic-sparkles" size='lg'/>
         </Link>
       </div>
       <div className='header__modal'>
