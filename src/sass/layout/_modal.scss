@@ -20,8 +20,12 @@
         flex-direction: column;
         text-align: center;
         z-index: 2;
+        padding: 1rem;
+        border-radius: 2rem;
     }
     &__header{
+        display: flex;
+        justify-content: space-around;
         &__title{
 
         }
