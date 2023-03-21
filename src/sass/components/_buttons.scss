@@ -4,4 +4,12 @@
         border: none;
         background-color: transparent;
     }
+    &__mana{
+        background-color: transparent;
+        border: none;
+        > svg{
+            width: 1rem;
+            height: 1rem;
+        }
+    }
 }
