@@ -1,8 +1,16 @@
-const mtg = require('mtgsdk')
+export const getCardsByColors = async (filter) => {
 
-export const getAllCard = async () => {
-        mtg.card.all()
-            .on('data', function (card) {
-            console.log(card.name)
-            });
+  const call = await fetch(`https://api.scryfall.com/cards/search?q=c%3A${filter}`)
+
+  /*.then((response) => response.json())
+  .then((data) => {
+    console.log("Success:", data);
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+  });*/
+  const data = await call.json()
+
+  return data
+
 }
