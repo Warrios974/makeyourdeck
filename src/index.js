@@ -5,13 +5,17 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { ModalContextProvider } from "./contexts/modalContext";
 import { UserContextProvider } from './contexts/userContext';
+import { DeckBuilderContextProvider } from './contexts/deckBuilderContext';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <BrowserRouter>
         <UserContextProvider>
             <ModalContextProvider>
-                <App />
+                <DeckBuilderContextProvider>
+                    <App />
+                </DeckBuilderContextProvider>
             </ModalContextProvider>
         </UserContextProvider>
     </BrowserRouter>

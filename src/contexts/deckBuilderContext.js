@@ -2,10 +2,10 @@ import { createContext, useEffect, useState } from "react";
 import { getCardsByColors, initSortCards } from "../api/MagicApi";
 import { search, theFilter } from "../search/search";
 
-export const SearchContext = createContext();
+export const DeckBuilderContext = createContext();
 
 //Composant d'ordre superieur
-export function SearchContextProvider(props) {
+export function DeckBuilderContextProvider(props) {
 
     const [loadingData, setLoadingData] = useState(true)
 
@@ -37,7 +37,7 @@ export function SearchContextProvider(props) {
     }, [filters])
     
     return (
-        <SearchContext.Provider value={{ 
+        <DeckBuilderContext.Provider value={{ 
                 stateCurrentCards : [
                     currentCards,
                     setCurrentCards
@@ -52,6 +52,6 @@ export function SearchContextProvider(props) {
                 ]
             }}>
             {(!loadingData) && props.children}
-        </SearchContext.Provider>
+        </DeckBuilderContext.Provider>
     )
 }

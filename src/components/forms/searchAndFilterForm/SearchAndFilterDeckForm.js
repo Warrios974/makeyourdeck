@@ -7,11 +7,11 @@ import { ReactComponent as BlackManaSvg } from "../../../assets/icons/mtg/B.svg"
 import { ReactComponent as ColorlessManaSvg } from "../../../assets/icons/mtg/C.svg";
 import { getAutocomplete, getCardsByColors, initSortCards } from '../../../api/MagicApi';
 import { faTruckMedical } from '@fortawesome/free-solid-svg-icons';
-import { SearchContext } from '../../../contexts/searchContext';
+import { DeckBuilderContext } from '../../../contexts/deckBuilderContext';
 
 function SearchAndFilterForm(props) {
 
-  const { stateFilters } = useContext(SearchContext)
+  const { stateFilters } = useContext(DeckBuilderContext)
   
   const [filters , setFilters] = stateFilters
   
