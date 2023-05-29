@@ -1,10 +1,9 @@
-import { getCards, initSortCards } from "../api/MagicApi"
-import { getCardsByColors } from "../api/MagicApi"
+import { getCards } from "../api/MagicApi"
 
 export const theFilter = {
-    name: undefined,
-    oracle: undefined,
-    set: undefined,
+    name: null,
+    oracle: null,
+    set: null,
     formats: {
         standard : false,
         modern : false,
@@ -54,22 +53,24 @@ export async function search(filter){
         const url = 'https://api.scryfall.com/cards/search?q=' + encodeURIComponent('-t:land')
 
         const cards = await getCards(url)
-
+        
         return cards 
 
     }
 
-    if (filter.name !== undefined) {
+    const formatURI = createURIFormat() + '+'
 
-        const url = 'https://api.scryfall.com/cards/named?exact='+ encodeURIComponent(filter.name)
+    if (filter.name !== null && filter.name !== '') {
+
+        const url = apiURI + search + formatURI + encodeURIComponent(filter.name)
 
         const cards = await getCards(url)
 
         return cards 
         
     }
-    
-    const oracle = filter.oracle !== undefined ? encodeURIComponent('o:' + filter.oracle) : ''
+
+    const oracle = createURIOracle(filter.oracle)
 
     const notLand = filter.types.land === false ? '+' + encodeURIComponent('-t:land') : ''
 
@@ -81,16 +82,11 @@ export async function search(filter){
 
     const orderURI = createURIOrder()
 
-    const formatURI = createURIFormat()
 
     // Pas oublier le plus + entre les differents catégorie sans encoder
     let url = apiURI + search + formatURI + colorsURI + raritiesURI + typesURI + oracle + notLand + orderURI
 
     const cards = await getCards(url)
-
-    console.log('====');
-    console.log('url',url);
-    console.log('====');
 
     //functions
     function addAndConcatener(type,table,filter) {
@@ -226,8 +222,16 @@ export async function search(filter){
 
     }
 
-    
-    
+    function createURIOracle(params) {
+
+        if (params === null || params === '') {
+            return ''
+        }else{
+            return encodeURIComponent('fo:"' + filter.oracle+ '"')
+        }
+
+    }
+
     function isVoid(){
 
         const OriginFilters = { ...theFilter, colors:{...theFilter.colors}, rarities:{...theFilter.rarities} }
