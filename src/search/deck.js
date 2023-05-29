@@ -1,14 +1,15 @@
 export const theDeck = {
-    name: undefined,
-    author : undefined,
-    visibility : undefined,
+    name: null,
+    author : null,
+    visibility : null,
     cards : {
         mainDeck : [],
         reserve : []
-    }
+    },
+    isInit : false
 }
 
-export const buildDeck = async (deck) => {
+export const deckBuild = async (deck) => {
 
     let currentDeck
 
