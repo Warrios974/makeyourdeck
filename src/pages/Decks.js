@@ -12,7 +12,7 @@ function Decks() {
     }
 
     return (
-        <main className='main'>
+        <div>
             <h1>DeckBuilder</h1>
             <button
             onClick={() => handleClick()}
@@ -20,7 +20,7 @@ function Decks() {
                 <FontAwesomeIcon icon="fa-solid fa-plus" />
                 Construire un nouveau deck
             </button>
-        </main>
+        </div>
     )
 }
 

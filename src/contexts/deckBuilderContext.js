@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { getCardsByColors, initSortCards } from "../api/MagicApi";
 import { search, theFilter } from "../search/search";
+import { deckBuild, theDeck } from "../search/deck";
 
 export const DeckBuilderContext = createContext();
 
@@ -10,6 +11,8 @@ export function DeckBuilderContextProvider(props) {
     const [loadingData, setLoadingData] = useState(true)
 
     const [filters, setFilters] = useState(theFilter)
+
+    const [currentDeck, setCurrentDeck] = useState(theDeck)
 
     const [currentCards, setCurrentCards] = useState([])
     const [nextPage, setnextPage] = useState()
@@ -27,6 +30,7 @@ export function DeckBuilderContextProvider(props) {
     }, [])
 
     useEffect(() => {
+        //Current card init
         const searchFunction = async () => {
             const fetch = await search(filters)
             const cards = fetch.data ? await initSortCards(fetch.data) : await initSortCards(fetch)
@@ -35,6 +39,16 @@ export function DeckBuilderContextProvider(props) {
         }
         searchFunction()
     }, [filters])
+
+    useEffect(() => {
+        //Current deck init
+        const completDeck = async () => {
+            const currentDeck = false
+
+            return currentDeck
+        }
+        completDeck()
+    }, [currentDeck])
     
     return (
         <DeckBuilderContext.Provider value={{ 
@@ -49,6 +63,10 @@ export function DeckBuilderContextProvider(props) {
                 stateFilters : [
                     filters,
                     setFilters
+                ],
+                stateDeck : [
+                    currentDeck,
+                    setCurrentDeck
                 ]
             }}>
             {(!loadingData) && props.children}
