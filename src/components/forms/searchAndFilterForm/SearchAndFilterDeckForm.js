@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react'
 import { library } from '@fortawesome/fontawesome-svg-core'
-/*import { ReactComponent as WhiteManaSvg } from "../../../assets/icons/mtg/W.svg";
+import { ReactComponent as WhiteManaSvg } from "../../../assets/icons/mtg/W.svg";
 import { ReactComponent as BlueManaSvg } from "../../../assets/icons/mtg/U.svg";
 import { ReactComponent as RedManaSvg } from "../../../assets/icons/mtg/R.svg";
 import { ReactComponent as GreenManaSvg } from "../../../assets/icons/mtg/G.svg";
 import { ReactComponent as BlackManaSvg } from "../../../assets/icons/mtg/B.svg";
-import { ReactComponent as ColorlessManaSvg } from "../../../assets/icons/mtg/C.svg";*/
+import { ReactComponent as ColorlessManaSvg } from "../../../assets/icons/mtg/C.svg";
 import { getAutocomplete } from '../../../api/MagicApi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -48,31 +48,38 @@ function SearchAndFilterForm() {
   const manaObject = [
     {
       name :'white',
-      svgUrl : '../../../assets/icons/mtg/W.svg'
+      svgUrl : '../../../assets/icons/mtg/W.svg',
+      component : <WhiteManaSvg />
     },
     {
       name :'blue',
-      svgUrl : '../../../assets/icons/mtg/U.svg'
+      svgUrl : '../../../assets/icons/mtg/U.svg',
+      component : <BlueManaSvg />
     },
     {
       name :'black',
-      svgUrl : '../../../assets/icons/mtg/B.svg'
+      svgUrl : '../../../assets/icons/mtg/B.svg',
+      component : <BlackManaSvg />
     },
     {
       name :'red',
-      svgUrl : '../../../assets/icons/mtg/R.svg'
+      svgUrl : '../../../assets/icons/mtg/R.svg',
+      component : <RedManaSvg />
     },
     {
       name :'green',
-      svgUrl : '../../../assets/icons/mtg/G.svg'
+      svgUrl : '../../../assets/icons/mtg/G.svg',
+      component : <GreenManaSvg />
     },
     {
       name :'colorless',
-      svgUrl : '../../../assets/icons/mtg/C.svg'
+      svgUrl : '../../../assets/icons/mtg/C.svg',
+      component : <ColorlessManaSvg />
     },
     {
       name :'multicolor ',
-      svgUrl : '../../../assets/icons/mtg/G.svg'
+      svgUrl : '../../../assets/icons/mtg/G.svg',
+      component : <ColorlessManaSvg />
     }
   ]
     
@@ -200,15 +207,16 @@ function SearchAndFilterForm() {
             </Form.Select>
           </Form.Group>
 
-          <Form.Group as={Col} controlId="formGridColors" className='d-flex align-items-center'>
+          <Form.Group as={Col} controlId="formGridColors" className='d-flex align-items-end'>
             <Row>
               { manaObject.map((color) => (
                   <Col 
                     key={color.name} 
                     onClick={(e) => addAFilter(e,'color',color.name)} 
                     value={color.name}
+                    className='btn btn__mana'
                   >
-                    {color.name}
+                    {color.component}
                   </Col>
                 ))
               }
