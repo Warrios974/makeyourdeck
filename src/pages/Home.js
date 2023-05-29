@@ -2,9 +2,9 @@ import React from 'react'
 
 function Home() {
   return (
-    <main className='main'>
+    <div>
       <h1>Bienvenue sur Make your deck</h1>
-    </main>
+    </div>
   )
 }
 

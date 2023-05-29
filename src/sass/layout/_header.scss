@@ -1,32 +1,10 @@
-.header{
+.sidebar {
     position: fixed;
-    width: 5rem;
-    height: 100%;
-    z-index: 2;
-    background-color: rgb(157, 93, 93);
-    display: flex;
-    align-items: flex-start;
-    &__navbar{
-        color: white;
-        display: flex;
-        flex-direction: column-reverse;
-        width: 100%;
-    }
-    &__navigation{
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-        margin-top: 1rem;
-        > a {
-            display: block;
-            background-color: red;
-            width: 4rem;
-            height: 4rem;
-            border-radius: 50%;
-            line-height: 4rem;
-            text-align: center;
-        }
-    }
+    top: 0;
+    bottom: 0;
+    left: 0;
+    min-height: 100vh !important;
+    z-index: 100;
+    padding: 48px 0 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
 }
