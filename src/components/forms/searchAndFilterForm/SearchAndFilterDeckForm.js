@@ -1,19 +1,21 @@
 import React, { useContext, useState } from 'react'
+import { library } from '@fortawesome/fontawesome-svg-core'
 import { ReactComponent as WhiteManaSvg } from "../../../assets/icons/mtg/W.svg";
 import { ReactComponent as BlueManaSvg } from "../../../assets/icons/mtg/U.svg";
 import { ReactComponent as RedManaSvg } from "../../../assets/icons/mtg/R.svg";
 import { ReactComponent as GreenManaSvg } from "../../../assets/icons/mtg/G.svg";
 import { ReactComponent as BlackManaSvg } from "../../../assets/icons/mtg/B.svg";
 import { ReactComponent as ColorlessManaSvg } from "../../../assets/icons/mtg/C.svg";
-import { getAutocomplete, getCardsByColors, initSortCards } from '../../../api/MagicApi';
-import { faTruckMedical } from '@fortawesome/free-solid-svg-icons';
-import { DeckBuilderContext } from '../../../contexts/deckBuilderContext';
+import { getAutocomplete } from '../../../api/MagicApi';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTruckMedical, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { Col, Form, InputGroup, ListGroup, Row } from 'react-bootstrap';
+
+library.add(faXmark)
 
 function SearchAndFilterForm(props) {
-
-  const { stateFilters } = useContext(DeckBuilderContext)
   
-  const [filters , setFilters] = stateFilters
+  const { filters, setFilters } = props
   
   const [colorsStates, setColorsStates] = useState({
     white : false,
@@ -26,15 +28,67 @@ function SearchAndFilterForm(props) {
   })
 
   const [listNameCard, setListNameCard] = useState([])
+  
+  const inputNameCard = document.getElementById('formGridName')
+
+  const typeList = [
+    'planeswalker',
+    'creature',
+    'instant',
+    'sorcery',
+    'enchantment',
+    'artifact',
+    'land',
+    'battle'
+  ]
+
+  const manaObject = [
+    {
+      name :'white',
+      svgUrl : '../../../assets/icons/mtg/W.svg'
+    },
+    {
+      name :'blue',
+      svgUrl : '../../../assets/icons/mtg/U.svg'
+    },
+    {
+      name :'black',
+      svgUrl : '../../../assets/icons/mtg/B.svg'
+    },
+    {
+      name :'red',
+      svgUrl : '../../../assets/icons/mtg/R.svg'
+    },
+    {
+      name :'green',
+      svgUrl : '../../../assets/icons/mtg/G.svg'
+    },
+    {
+      name :'colorless',
+      svgUrl : '../../../assets/icons/mtg/C.svg'
+    },
+    {
+      name :'multicolor ',
+      svgUrl : '../../../assets/icons/mtg/G.svg'
+    }
+  ]
     
   const addAFilter = (e,filter,value) => {
 
     e.preventDefault()
 
-    const inputNameCard = document.getElementById('searchInNane')
-
     let localFilters = JSON.parse(JSON.stringify(filters))
     let localColorsStates = { ...colorsStates }
+    let localTypes = { 
+      planeswalker : false,
+      creature : false,
+      instant : false,
+      sorcery : false,
+      enchantment : false,
+      artifact : false,
+      land : false,
+      battle : false 
+    }
 
     if (filter === 'color') {
 
@@ -46,12 +100,8 @@ function SearchAndFilterForm(props) {
 
     }
 
-    if (filter === 'oracle' && (value.length > 3 || value.length === 0)) {
+    if (filter === 'oracle') {
       localFilters.oracle = value
-    }
-
-    if (filter === 'oracle' && (value.length <= 3)) {
-      localFilters.oracle = undefined
     }
 
     if (filter === 'name') {
@@ -60,6 +110,19 @@ function SearchAndFilterForm(props) {
       localFilters.name = value
 
       setListNameCard([])
+      
+    }
+
+    if (filter === 'type' ) {
+
+      if (value === 'Choose a type ...') {
+        localFilters.types = localTypes
+      }
+      if (value !== 'Choose a type ...') {
+        localTypes[value] = true
+      }
+
+      localFilters.types = localTypes
       
     }
 
@@ -83,85 +146,74 @@ function SearchAndFilterForm(props) {
     }
   }
 
+  const removeCardName = async () => {
+
+    let localFilters = JSON.parse(JSON.stringify(filters))
+    localFilters.name = ''
+    inputNameCard.value = ''
+    
+    setFilters(localFilters)
+
+  }
+
   return (
-    <form className='form formSearchAndFilterDeck'>
-      <fieldset className='formSearchAndFilterDeck__search'>
-        <div className='searchSelect'>
-          <label htmlFor='searchInNane'>Name</label>
-          <input id='searchInNane' formEncType='texte' onChange={(e) => searchCardName(e.target.value)}></input>
-          <ul className='searchSelect__items__group'>
-            { listNameCard.length > 0 && listNameCard.map((name) => (
-                <li className='searchSelect__item' key={name} onClick={(e) => addAFilter(e,'name',name)}>
-                  {name}
-                </li>
-              ))
-            }
-          </ul>
-        </div>
-        <label htmlFor='searchInDescription'>Search in description</label>
-        <input id='searchInDescription' formEncType='texte' onChange={(e) => addAFilter(e,'oracle',e.target.value)}></input>
-      </fieldset>
-      <fieldset className='formSearchAndFilterDeck__filter'>
-        <ul>
-          <li>
-            <button 
-            className='btn btn__mana'
-            onClick={(e) => addAFilter(e,'color','white')}
-            >
-              <WhiteManaSvg />
-            </button> 
-          </li>
-          <li>
-            <button 
-            className='btn btn__mana'
-            onClick={(e) => addAFilter(e,'color', 'blue')}
-            >
-              <BlueManaSvg />
-            </button> 
-          </li>
-          <li>
-            <button 
-            className='btn btn__mana'
-            onClick={(e) => addAFilter(e,'color', 'black')}
-            >
-              <BlackManaSvg/>
-            </button> 
-          </li>
-          <li>
-            <button 
-            className='btn btn__mana'
-            onClick={(e) => addAFilter(e,'color', 'red')}
-            >
-              <RedManaSvg />
-            </button> 
-          </li>
-          <li>
-            <button 
-            className='btn btn__mana'
-            onClick={(e) => addAFilter(e,'color', 'green')}
-            >
-              <GreenManaSvg />
-            </button> 
-          </li>
-          <li>
-            <button 
-            className='btn btn__mana'
-            onClick={(e) => addAFilter(e,'color', 'colorless')}
-            >
-              <ColorlessManaSvg />
-            </button> 
-          </li>
-          <li>
-            <button 
-            className='btn btn__mana'
-            onClick={(e) => addAFilter(e,'color', 'multicolor')}
-            >
-              <ColorlessManaSvg />
-            </button> 
-          </li>
-        </ul>
-      </fieldset>
-    </form>
+    <Form>
+      <Form.Group>
+        <Row className="mb-3">
+
+        <Form.Group as={Col} controlId="formGridName" className='position-relative'>
+            <Form.Label>Name</Form.Label>
+            <InputGroup>
+              <Form.Control type='text' onChange={(e) => searchCardName(e.target.value)}/>
+                <ListGroup className='position-absolute'>
+                  { listNameCard.length > 0 && listNameCard.map((name) => (
+                    <ListGroup.Item action key={name} onClick={(e) => addAFilter(e,'name',name)}>
+                    {name}
+                    </ListGroup.Item>
+                    ))
+                  }
+                </ListGroup>
+              <InputGroup.Text onClick={(e) => removeCardName()}>
+                <FontAwesomeIcon icon="fa-solid fa-xmark" />
+                </InputGroup.Text>
+            </InputGroup>
+          </Form.Group>
+
+          <Form.Group as={Col} controlId="formGridSearchDescription">
+            <Form.Label>Search in description</Form.Label>
+            <Form.Control type='text' onChange={(e) => addAFilter(e,'oracle',e.target.value)}/>
+          </Form.Group>
+
+          <Form.Group as={Col} controlId="formGridType">
+            <Form.Label>Type</Form.Label>
+            <Form.Select defaultValue="Choose..." onChange={(e) => addAFilter(e,'type',e.target.value)}>
+              <option>Choose a type ...</option>
+              { typeList.map((name) => (
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
+                ))
+              }
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group as={Col} controlId="formGridColors" className='d-flex align-items-center'>
+            <Row>
+              { manaObject.map((color) => (
+                  <Col 
+                    key={color.name} 
+                    onClick={(e) => addAFilter(e,'color',color.name)} 
+                    value={color.name}
+                  >
+                    {color.name}
+                  </Col>
+                ))
+              }
+            </Row>
+          </Form.Group>
+        </Row>
+      </Form.Group>
+    </Form>
   )
 }
 
