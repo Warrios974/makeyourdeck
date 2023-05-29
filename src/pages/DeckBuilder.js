@@ -10,33 +10,18 @@ function DeckBuilder() {
     
     const { stateCurrentCards, stateNextPage, stateFilters, stateDeck  } = useContext(DeckBuilderContext)
   
-    const [currentCards, setCurrentCards] = stateCurrentCards
-    const [nextPage, setNextPage] = stateNextPage
-    const [filters , setFilters] = stateFilters
-    const [currentDeck , setCurrentDeck] = stateDeck
+    const [currentCards] = stateCurrentCards
+    const [currentDeck] = stateDeck
 
     if (currentCards === []) return <main className='main'>Loading...</main>
 
     return (
         <div>
-            <SelectYourDeckType 
-                currentDeck={currentDeck}
-                setCurrentDeck={setCurrentDeck}
-                filters={filters}
-                setFilters={setFilters}
-            />
-            <SearchAndFilterDeckForm 
-                setCurrentCards={setCurrentCards}
-                filters={filters}
-                setFilters={setFilters}
-                />
+            <SelectYourDeckType />
+            <SearchAndFilterDeckForm />
             <h2>Carrousel</h2>
             <Row>
-                <Carrousel
-                    nextPage={nextPage}
-                    currentCards={currentCards}
-                    currentDeck={currentDeck}
-                    setCurrentDeck={setCurrentDeck} />
+                <Carrousel />
                 <Sidebar 
                     currentDeck={currentDeck}
                 />

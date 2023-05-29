@@ -1,15 +1,18 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Card from './Card'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Col, Row } from 'react-bootstrap'
+import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
+
 
 library.add(faChevronLeft, faChevronRight)
 
-function Carrousel(props) {
+function Carrousel() {
+
+  const { stateCurrentCards } = useContext(DeckBuilderContext)
     
-  const { currentCards, currentDeck, setCurrentDeck } = props
+  const [currentCards] = stateCurrentCards
 
   if (currentCards === []) return <div>Loading...</div>
 
@@ -32,9 +35,7 @@ function Carrousel(props) {
         { currentCards.map((card) => (
             <article key={`${card.id}`} className='col-3'>
               <Card 
-                card={card} 
-                setCurrentDeck={setCurrentDeck}
-                currentDeck={currentDeck} />
+                card={card}  />
             </article>
           ))
         }

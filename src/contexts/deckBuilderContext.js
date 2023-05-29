@@ -13,6 +13,18 @@ export function DeckBuilderContextProvider(props) {
     const [filters, setFilters] = useState(theFilter)
 
     const [currentDeck, setCurrentDeck] = useState(theDeck)
+    const addCardInDeck = (cardID,action) => {
+        if (action === 'add') {
+            const fetch = deckBuild(currentDeck).addCard(cardID)
+        }
+        setCurrentDeck()
+    }
+    const removeCardInDeck = (cardID,action) => {
+        if (action === 'remove') {
+            const fetch = deckBuild(currentDeck).removeCard(cardID)
+        }
+        setCurrentDeck()
+    }
 
     const [currentCards, setCurrentCards] = useState([])
     const [nextPage, setnextPage] = useState()
@@ -66,7 +78,9 @@ export function DeckBuilderContextProvider(props) {
                 ],
                 stateDeck : [
                     currentDeck,
-                    setCurrentDeck
+                    setCurrentDeck,
+                    addCardInDeck,
+                    removeCardInDeck
                 ]
             }}>
             {(!loadingData) && props.children}

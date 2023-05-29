@@ -1,11 +1,15 @@
-import React from 'react'
-import { UrlAPI, getCards } from '../../api/MagicApi'
+import React, { useContext } from 'react'
+import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
 
 function Card(props) {
+  
+  const { stateDeck } = useContext(DeckBuilderContext)
 
-    const { card, currentDeck, setCurrentDeck } = props
+  const { card } = props
 
-    const addCardInDeck = async (id) => {
+  const [ addCardInDeck ] = stateDeck
+
+    /*const addCard = async (id) => {
 
       const URL = UrlAPI + `/cards/${id}`
 
@@ -22,7 +26,7 @@ function Card(props) {
       console.log('localDeck',localDeck);
       console.log('====');
       
-    }
+    }*/
       
     const fatoryCard = (layout) => {
 

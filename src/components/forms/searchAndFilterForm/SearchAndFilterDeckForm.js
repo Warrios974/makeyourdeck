@@ -1,21 +1,24 @@
 import React, { useContext, useState } from 'react'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { ReactComponent as WhiteManaSvg } from "../../../assets/icons/mtg/W.svg";
+/*import { ReactComponent as WhiteManaSvg } from "../../../assets/icons/mtg/W.svg";
 import { ReactComponent as BlueManaSvg } from "../../../assets/icons/mtg/U.svg";
 import { ReactComponent as RedManaSvg } from "../../../assets/icons/mtg/R.svg";
 import { ReactComponent as GreenManaSvg } from "../../../assets/icons/mtg/G.svg";
 import { ReactComponent as BlackManaSvg } from "../../../assets/icons/mtg/B.svg";
-import { ReactComponent as ColorlessManaSvg } from "../../../assets/icons/mtg/C.svg";
+import { ReactComponent as ColorlessManaSvg } from "../../../assets/icons/mtg/C.svg";*/
 import { getAutocomplete } from '../../../api/MagicApi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTruckMedical, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { Col, Form, InputGroup, ListGroup, Row } from 'react-bootstrap';
+import { DeckBuilderContext } from '../../../contexts/deckBuilderContext';
 
 library.add(faXmark)
 
-function SearchAndFilterForm(props) {
+function SearchAndFilterForm() {
   
-  const { filters, setFilters } = props
+  const { stateFilters } = useContext(DeckBuilderContext)
+
+  const [filters, setFilters] = stateFilters
   
   const [colorsStates, setColorsStates] = useState({
     white : false,

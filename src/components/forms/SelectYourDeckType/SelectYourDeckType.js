@@ -5,9 +5,10 @@ import { DeckBuilderContext } from '../../../contexts/deckBuilderContext'
 
 function SelectYourDeckType(props) {
 
-  const { toggleModals } = useContext(ModalContext)
+  const { stateFilters, stateDeck } = useContext(DeckBuilderContext)
   
-  const { filters, setFilters, currentDeck, setCurrentDeck } = props
+  const [filters, setFilters] = stateFilters
+  const [currentDeck, setCurrentDeck] = stateDeck
 
   const [nameDeck, setNameDeck] = useState(undefined)
   const [nameDeckError, setNameDeckError] = useState({
@@ -140,7 +141,6 @@ function SelectYourDeckType(props) {
                 <span>{gameFormatError.textError}</span>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => toggleModals("initYourDeck")}>Close</Button>
             <Button variant="primary" type="submit">Create</Button>
           </Modal.Footer>
         </Modal.Dialog>
