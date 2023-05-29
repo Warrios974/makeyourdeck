@@ -1,8 +1,28 @@
 import React from 'react'
+import { UrlAPI, getCards } from '../../api/MagicApi'
 
 function Card(props) {
 
-    const { card } = props
+    const { card, currentDeck, setCurrentDeck } = props
+
+    const addCardInDeck = async (id) => {
+
+      const URL = UrlAPI + `/cards/${id}`
+
+      const fetch = await getCards(URL)
+
+      let localDeck = JSON.parse(JSON.stringify(currentDeck))
+
+      localDeck.cards.mainDeck.push(fetch)
+
+      setCurrentDeck(localDeck)
+
+      console.log('====');
+      console.log('currentDeck',currentDeck);
+      console.log('localDeck',localDeck);
+      console.log('====');
+      
+    }
       
     const fatoryCard = (layout) => {
 
@@ -14,24 +34,39 @@ function Card(props) {
         const carddoubleFaces = card.card_faces
 
         return (
-          <div className='card__doubleFaces'>
+          <>
             { carddoubleFaces.map((card) => (
-                <img src={card.image_uris['normal']} alt={card.name} key={`${card.name}`}  />
+                <img 
+                  className='img-fluid img-thumbnail'
+                  src={card.image_uris['normal']} 
+                  alt={card.name} 
+                  key={`${card.name}`} 
+                  id={card.id} 
+                  loading='lazy'
+                  onClick={() => addCardInDeck(card.id)}/>
               ))
             }
-          </div>
+          </>
         )
       }
       if (conditionSingleFaces) {
         return (
           <>
-              <img src={card.image_uris['normal']} alt={card.name} />
+              <img 
+                className='img-fluid img-thumbnail'
+                src={card.image_uris['normal']} 
+                alt={card.name} 
+                id={card.id}
+                loading='lazy'
+                onClick={() => addCardInDeck(card.id)} />
           </>
         )
       }
 
     }
 
+  if (card === []) return <div>Loading...</div>
+  
   return fatoryCard(card.layout)
 }
 
