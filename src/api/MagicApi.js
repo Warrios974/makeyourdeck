@@ -1,52 +1,34 @@
-export const getCardsByColors = async (filter) => {
-
-  const call = await fetch(`https://api.scryfall.com/cards/search?q=c%3A${filter}`)
-
-  /*.then((response) => response.json())
-  .then((data) => {
-    console.log("Success:", data);
-  })
-  .catch((error) => {
-    console.error("Error:", error);
-  });*/
-  const data = await call.json()
-
-  return data
-
-}
+export const UrlAPI = 'https://api.scryfall.com/'
 
 export const getCards = async (URI) => {
 
-  const call = await fetch(URI)
+  let cards
 
-  /*.then((response) => response.json())
+  await fetch(URI)
+  .then((response) => response.json())
   .then((data) => {
-    console.log("Success:", data);
+    cards = data
   })
   .catch((error) => {
-    console.error("Error:", error);
-  });*/
-  const data = await call.json()
+    cards = error
+  })
+  
+  console.log('====');
+  console.log('URI',URI);
+  console.log('====');
 
-  return data
+  return cards
 
 }
 
 export const getAutocomplete = async (value) => {
 
-  const uri = 'https://api.scryfall.com/cards/autocomplete?q='
+  const uri = UrlAPI + 'cards/autocomplete?q='
 
   const url = uri + value
 
   const call = await fetch(url)
 
-  /*.then((response) => response.json())
-  .then((data) => {
-    console.log("Success:", data);
-  })
-  .catch((error) => {
-    console.error("Error:", error);
-  });*/
   const data = await call.json()
 
   return data
