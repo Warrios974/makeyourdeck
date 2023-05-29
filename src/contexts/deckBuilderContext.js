@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { getCardsByColors, initSortCards } from "../api/MagicApi";
+import { initSortCards } from "../api/MagicApi";
 import { search, theFilter } from "../search/search";
 import { deckBuild, theDeck } from "../search/deck";
 
@@ -13,18 +13,8 @@ export function DeckBuilderContextProvider(props) {
     const [filters, setFilters] = useState(theFilter)
 
     const [currentDeck, setCurrentDeck] = useState(theDeck)
-    const addCardInDeck = (cardID,action) => {
-        if (action === 'add') {
-            const fetch = deckBuild(currentDeck).addCard(cardID)
-        }
-        setCurrentDeck()
-    }
-    const removeCardInDeck = (cardID,action) => {
-        if (action === 'remove') {
-            const fetch = deckBuild(currentDeck).removeCard(cardID)
-        }
-        setCurrentDeck()
-    }
+    const [addCard, setAddCard] = useState('')
+    const [removeCard, setRemoveCard] = useState('')
 
     const [currentCards, setCurrentCards] = useState([])
     const [nextPage, setnextPage] = useState()
@@ -54,13 +44,25 @@ export function DeckBuilderContextProvider(props) {
 
     useEffect(() => {
         //Current deck init
-        const completDeck = async () => {
-            const currentDeck = false
-
-            return currentDeck
+        const addCardInDeck = async () => {
+            const init = await deckBuild(currentDeck, currentCards)
+            const newDeck = await init.addCard(addCard)
+            setCurrentDeck(newDeck)
+            setAddCard()
+            return newDeck
         }
-        completDeck()
-    }, [currentDeck])
+        addCardInDeck()
+    }, [addCard])
+
+    useEffect(() => {
+        const removeCardInDeck = async () => {
+            const init = await deckBuild(currentDeck, currentCards)
+            const newDeck = await init.removeCard(removeCard)
+            setCurrentDeck(newDeck)
+            setRemoveCard()
+        }
+        removeCardInDeck()
+    }, [removeCard])
     
     return (
         <DeckBuilderContext.Provider value={{ 
@@ -79,8 +81,8 @@ export function DeckBuilderContextProvider(props) {
                 stateDeck : [
                     currentDeck,
                     setCurrentDeck,
-                    addCardInDeck,
-                    removeCardInDeck
+                    setAddCard,
+                    setRemoveCard
                 ]
             }}>
             {(!loadingData) && props.children}

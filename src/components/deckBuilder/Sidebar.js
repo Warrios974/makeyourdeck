@@ -1,9 +1,12 @@
-import React from 'react'
-import { Col } from 'react-bootstrap'
+import React, { useContext } from 'react'
+import { Button, Col } from 'react-bootstrap'
+import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
 
-function Sidebar(props) {
+function Sidebar() {
 
-  const { currentDeck } = props
+  const { stateDeck } = useContext(DeckBuilderContext)
+
+  const [currentDeck, setCurrentDeck, setAddCard, setRemoveCard] = stateDeck
   
   if (currentDeck.cards.mainDeck === [] && currentDeck.cards.mainDeck.length < 0) return <div>Loading...</div>
 
@@ -13,9 +16,13 @@ function Sidebar(props) {
     <Col sm={3}>
       <aside>
       { mainDeck.map((card) => (
-          <article key={`${card.id}`}>
+        <Button
+          key={`${card.id}`} 
+          onClick={() => setRemoveCard(card.id)}
+          className='m-2'>
+            <span>{card.quantity}x </span>
             <span>{card.name}</span>
-          </article>
+        </Button>
         ))
       }
       </aside>

@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
+import { Col } from 'react-bootstrap'
 
 function Card(props) {
   
@@ -7,7 +8,11 @@ function Card(props) {
 
   const { card } = props
 
-  const [ addCardInDeck ] = stateDeck
+  const [ currentDeck, setCurrentDeck, setAddCard, setRemoveCard ] = stateDeck
+
+  const handleClick = (cardId) => {
+    setAddCard(cardId)
+  }
 
     /*const addCard = async (id) => {
 
@@ -39,17 +44,21 @@ function Card(props) {
 
         return (
           <>
-            { carddoubleFaces.map((card) => (
+              <Col 
+              key={`${card.id}`} 
+              onClick={() => handleClick(card.id)}
+              className='position-relative'
+              >
+              { carddoubleFaces.map((element) => (
                 <img 
-                  className='img-fluid img-thumbnail'
-                  src={card.image_uris['normal']} 
-                  alt={card.name} 
-                  key={`${card.name}`} 
-                  id={card.id} 
+                  className='img-fluid img-thumbnail position-absolute'
+                  src={element.image_uris['normal']} 
+                  alt={element.name}
                   loading='lazy'
-                  onClick={() => addCardInDeck(card.id)}/>
-              ))
-            }
+                  />
+                  ))
+                }
+              </Col>
           </>
         )
       }
@@ -62,7 +71,7 @@ function Card(props) {
                 alt={card.name} 
                 id={card.id}
                 loading='lazy'
-                onClick={() => addCardInDeck(card.id)} />
+                onClick={() => handleClick(card.id)} />
           </>
         )
       }
