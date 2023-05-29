@@ -6,19 +6,28 @@ export const ModalContext = createContext();
 export function ModalContextProvider(props) {
 
     const [modalState, setModalState] = useState({
-        signInModal : false
+        signInModal : false,
+        initYourDeckModal : true
     })
 
     //Fermer ou ouvrir les modales
     const toggleModals = modal => {
         if(modal === "signIn"){
             setModalState({
-                signInModal : true
+                signInModal : true,
+                initYourDeckModal : false
+            })
+        }
+        if(modal === "initYourDeck"){
+            setModalState({
+                signInModal : false,
+                initYourDeckModal : true
             })
         }
         if(modal === "close"){
             setModalState({
-                signInModal : false
+                signInModal : false,
+                initYourDeckModal : false
             })
         }
     }
