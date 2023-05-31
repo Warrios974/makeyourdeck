@@ -45,16 +45,17 @@ function Card(props) {
         return (
           <>
               <Col 
-              key={`${card.id}`} 
               onClick={() => handleClick(card.id)}
               className='position-relative'
+              key={`${card.id}-container`} 
               >
-              { carddoubleFaces.map((element) => (
+              { carddoubleFaces.map((element, index) => (
                 <img 
                   className='img-fluid img-thumbnail position-absolute'
                   src={element.image_uris['normal']} 
                   alt={element.name}
                   loading='lazy'
+                  key={`${index}-${card.id}-image`} 
                   />
                   ))
                 }
