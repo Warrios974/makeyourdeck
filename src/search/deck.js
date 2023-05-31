@@ -49,7 +49,7 @@ export async function deckBuild(deck,cards) {
             const isInMainDeck = cardInMainDeck ? true : false
     
             if (isInMainDeck) {
-                if (cardInMainDeck.quantity < 4 && cardInMainDeck.quantity > 0) cardInMainDeck.quantity -= 1
+                if ((cardInMainDeck.quantity < 4 || cardInMainDeck.quantity === 4) && cardInMainDeck.quantity > 0) cardInMainDeck.quantity -= 1
                 if (cardInMainDeck.quantity === 0) mainDeck = mainDeck.filter((card) => card.id !== cardId)
             }
 
