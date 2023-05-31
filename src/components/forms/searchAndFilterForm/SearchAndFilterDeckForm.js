@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { Col, Form, InputGroup, ListGroup, Row } from 'react-bootstrap';
 import { DeckBuilderContext } from '../../../contexts/deckBuilderContext';
+import Select from 'react-select';
 
 library.add(faXmark)
 
@@ -82,7 +83,14 @@ function SearchAndFilterForm() {
       component : <ColorlessManaSvg />
     }
   ]
-    
+
+  const optionsRarity = [
+    { value: 'commun', label: 'Commun' },
+    { value: 'uncommun', label: 'Uncommun' },
+    { value: 'rare', label: 'Rare' },
+    { value: 'mythic', label: 'Mythic' }
+  ]
+
   const addAFilter = (e,filter,value) => {
 
     e.preventDefault()
@@ -205,6 +213,14 @@ function SearchAndFilterForm() {
                 ))
               }
             </Form.Select>
+          </Form.Group>
+          <Form.Group as={Col} controlId="formGridRarity">
+            <label htmlFor='selectRarity'>Rarity</label>
+            <Select 
+              id='selectRarity'
+              options={optionsRarity} 
+              isMulti
+              />
           </Form.Group>
 
           <Form.Group as={Col} controlId="formGridColors" className='d-flex align-items-end'>
