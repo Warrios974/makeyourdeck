@@ -11,7 +11,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { Col, Form, InputGroup, ListGroup, Row } from 'react-bootstrap';
 import { DeckBuilderContext } from '../../../contexts/deckBuilderContext';
-import Select from 'react-select';
 
 library.add(faXmark)
 
@@ -30,6 +29,13 @@ function SearchAndFilterForm() {
     colorless : false,
     multicolor : false
   })
+  
+  const [raritiesStates, setRaritiesStates] = useState({
+    common : false,
+    uncommon : false,
+    rare : false,
+    mythic : false,
+})
 
   const [listNameCard, setListNameCard] = useState([])
   
@@ -44,6 +50,29 @@ function SearchAndFilterForm() {
     'artifact',
     'land',
     'battle'
+  ]
+
+  const rariryList = [
+    {
+      name :'Commun',
+      value : 'common',
+      icon : ''
+    },
+    {
+      name :'Uncommun',
+      value : 'uncommon',
+      icon : ''
+    },
+    {
+      name :'Rare',
+      value : 'rare',
+      icon : ''
+    },
+    {
+      name :'Mythic',
+      value : 'mythic',
+      icon : ''
+    }
   ]
 
   const manaObject = [
@@ -84,19 +113,14 @@ function SearchAndFilterForm() {
     }
   ]
 
-  const optionsRarity = [
-    { value: 'commun', label: 'Commun' },
-    { value: 'uncommun', label: 'Uncommun' },
-    { value: 'rare', label: 'Rare' },
-    { value: 'mythic', label: 'Mythic' }
-  ]
-
   const addAFilter = (e,filter,value) => {
 
     e.preventDefault()
 
     let localFilters = JSON.parse(JSON.stringify(filters))
     let localColorsStates = { ...colorsStates }
+    let localRarityStates = { ...raritiesStates }
+
     let localTypes = { 
       planeswalker : false,
       creature : false,
@@ -144,9 +168,21 @@ function SearchAndFilterForm() {
       
     }
 
+    if (filter === 'rarity' ) {
+
+      if (localRarityStates[value] === false) {
+        localRarityStates[value] = true
+      }else{
+        localRarityStates[value] = false
+      }
+      
+    }
+
     if (localColorsStates !== localFilters.colors) localFilters.colors = localColorsStates
+    if (localRarityStates !== localFilters.rarities) localFilters.rarities = localRarityStates
 
     setColorsStates(localColorsStates)
+    setRaritiesStates(localRarityStates)
     setFilters(localFilters)
 
   }
@@ -215,12 +251,16 @@ function SearchAndFilterForm() {
             </Form.Select>
           </Form.Group>
           <Form.Group as={Col} controlId="formGridRarity">
-            <label htmlFor='selectRarity'>Rarity</label>
-            <Select 
-              id='selectRarity'
-              options={optionsRarity} 
-              isMulti
-              />
+              { rariryList.map((rarity) => (
+                  <Col 
+                    key={rarity.name} 
+                    onClick={(e) => addAFilter(e,'rarity',rarity.value)}
+                    className='btn btn__mana'
+                  >
+                    {rarity.name}
+                  </Col>
+                ))
+              }
           </Form.Group>
 
           <Form.Group as={Col} controlId="formGridColors" className='d-flex align-items-end'>
@@ -228,8 +268,7 @@ function SearchAndFilterForm() {
               { manaObject.map((color) => (
                   <Col 
                     key={color.name} 
-                    onClick={(e) => addAFilter(e,'color',color.name)} 
-                    value={color.name}
+                    onClick={(e) => addAFilter(e,'color',color.name)}
                     className='btn btn__mana'
                   >
                     {color.component}
