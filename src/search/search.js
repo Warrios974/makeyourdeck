@@ -211,7 +211,10 @@ export async function search(filter){
         const formats = [
             ['standard', 'f:standard'],
             ['modern', 'f:modern'],
-            ['commander', 'f:commander']
+            ['vintage', 'f:vintage'],
+            ['commander', 'f:commander'],
+            ['brawl', 'f:brawl'],
+            ['duel', 'f:duel']
         ]
         
         const orderURI = addAndConcatener('formats',formats,formatsFilter)
