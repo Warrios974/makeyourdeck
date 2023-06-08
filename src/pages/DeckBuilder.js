@@ -1,10 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import Carrousel from '../components/deckBuilder/Carrousel'
 import SearchAndFilterDeckForm from '../components/forms/searchAndFilterForm/SearchAndFilterDeckForm'
 import { DeckBuilderContext } from '../contexts/deckBuilderContext'
 import SelectYourDeckType from '../components/forms/SelectYourDeckType/SelectYourDeckType'
 import Sidebar from '../components/deckBuilder/Sidebar'
-import { Col, Row } from 'react-bootstrap'
+import { Row } from 'react-bootstrap'
 
 function DeckBuilder() {
     
@@ -12,6 +12,10 @@ function DeckBuilder() {
   
     const [currentCards] = stateCurrentCards
     const [currentDeck] = stateDeck
+
+    console.log('====');
+    console.log('currentDeck',currentDeck);
+    console.log('====');
 
     if (currentCards === []) return <main className='main'>Loading...</main>
 
