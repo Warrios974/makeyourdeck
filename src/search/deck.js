@@ -1,10 +1,10 @@
 export const theDeck = {
     name: null,
     author : null,
-    visibility : null,
+    public : null,
+    type: null,
     cards : {
-        mainDeck : [],
-        reserve : []
+        mainDeck : []
     },
     isInit : false
 }
@@ -19,7 +19,7 @@ export async function deckBuild(deck,cards) {
 
     function addCard(cardId) {
 
-        if (cardId) {
+        if (cardId && localDeck.cards.numberExemple > 1) {
     
             const cardInMainDeck = mainDeck.find(card => card.id === cardId)
             
@@ -42,7 +42,7 @@ export async function deckBuild(deck,cards) {
     }
 
     function removeCard(cardId) {
-        if (cardId) {
+        if (cardId && localDeck.cards.numberExemple > 1) {
     
             const cardInMainDeck = mainDeck.find(card => card.id === cardId)
             
@@ -59,19 +59,6 @@ export async function deckBuild(deck,cards) {
         }
 
         return deck
-    }
-    
-    function isVoid(){
-
-        const originDeck = JSON.parse(JSON.stringify(theDeck))
-        
-        const JSONDeck = JSON.stringify(deck)
-        const JSONOriginDeck = JSON.stringify(originDeck)
-
-        if (JSONDeck === JSONOriginDeck) return true
-
-        return false
-
     }
 
     return {
