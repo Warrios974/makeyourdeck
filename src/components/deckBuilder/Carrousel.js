@@ -10,11 +10,11 @@ library.add(faChevronLeft, faChevronRight)
 
 function Carrousel() {
 
-  const { stateCurrentCards } = useContext(DeckBuilderContext)
+  const { stateCurrentCards, loadingData } = useContext(DeckBuilderContext)
     
   const [currentCards] = stateCurrentCards
 
-  if (currentCards === []) return <div>Loading...</div>
+  if (currentCards.length === 0 || loadingData) return <div>Loading...</div>
 
   if (currentCards[0].object === "error") {
     return (

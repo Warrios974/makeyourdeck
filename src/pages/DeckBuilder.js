@@ -13,10 +13,6 @@ function DeckBuilder() {
     const [currentCards] = stateCurrentCards
     const [currentDeck] = stateDeck
 
-    console.log('====');
-    console.log('currentDeck',currentDeck);
-    console.log('====');
-
     if (currentCards === []) return <main className='main'>Loading...</main>
 
     return (

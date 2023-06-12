@@ -9,29 +9,6 @@ function Card(props) {
   const { card } = props
 
   const [ currentDeck, setCurrentDeck, setAddCard, setRemoveCard ] = stateDeck
-
-  const handleClick = (cardId) => {
-    setAddCard(cardId)
-  }
-
-    /*const addCard = async (id) => {
-
-      const URL = UrlAPI + `/cards/${id}`
-
-      const fetch = await getCards(URL)
-
-      let localDeck = JSON.parse(JSON.stringify(currentDeck))
-
-      localDeck.cards.mainDeck.push(fetch)
-
-      setCurrentDeck(localDeck)
-
-      console.log('====');
-      console.log('currentDeck',currentDeck);
-      console.log('localDeck',localDeck);
-      console.log('====');
-      
-    }*/
       
     const fatoryCard = (layout) => {
 
@@ -45,7 +22,7 @@ function Card(props) {
         return (
           <>
               <Col 
-              onClick={() => handleClick(card.id)}
+              onClick={() => setAddCard(card)}
               className='position-relative'
               key={`${card.id}-container`} 
               >
@@ -72,7 +49,7 @@ function Card(props) {
                 alt={card.name} 
                 id={card.id}
                 loading='lazy'
-                onClick={() => handleClick(card.id)} />
+                onClick={() => setAddCard(card)} />
           </>
         )
       }

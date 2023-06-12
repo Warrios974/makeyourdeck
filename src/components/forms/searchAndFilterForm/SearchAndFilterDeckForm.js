@@ -16,7 +16,7 @@ library.add(faXmark)
 
 function SearchAndFilterForm() {
   
-  const { stateFilters } = useContext(DeckBuilderContext)
+  const { stateFilters, setLoadingData } = useContext(DeckBuilderContext)
 
   const [filters, setFilters] = stateFilters
   

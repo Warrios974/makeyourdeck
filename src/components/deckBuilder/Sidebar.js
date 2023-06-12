@@ -8,7 +8,13 @@ function Sidebar() {
 
   const [currentDeck, setCurrentDeck, setAddCard, setRemoveCard] = stateDeck
   
-  if (currentDeck.cards.mainDeck === [] && currentDeck.cards.mainDeck.length < 0) return <div>Loading...</div>
+  if (currentDeck.cards.mainDeck.length <= 1) return (
+    <Col sm={3}>
+      <aside>
+        Aucune carte dans votre deck
+      </aside>
+    </Col>
+    )
 
   const mainDeck = currentDeck.cards.mainDeck
 
@@ -16,12 +22,15 @@ function Sidebar() {
     <Col sm={3}>
       <aside>
       { mainDeck.map((card) => (
-        <Button
+        card.id && 
+          <Button
           key={`${card.id}`} 
-          onClick={() => setRemoveCard(card.id)}
+          onClick={() => setRemoveCard(card)}
           className='m-2'>
+            
             <span>{card.quantity}x </span>
             <span>{card.name}</span>
+            
         </Button>
         ))
       }

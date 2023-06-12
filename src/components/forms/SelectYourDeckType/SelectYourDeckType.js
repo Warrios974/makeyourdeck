@@ -46,8 +46,8 @@ function SelectYourDeckType() {
       const sixty = ['vintage','standard','modern']
       const hundred = ['commander','brawl','duel']
 
-      const isSixty = sixty.filter((element) => element === format)
-      const isHundred = hundred.filter((element) => element === format)
+      const isSixty = sixty.find((element) => element === format) ? true : false
+      const isHundred = hundred.find((element) => element === format) ? true : false
 
       if (isSixty) {
 
@@ -79,6 +79,10 @@ function SelectYourDeckType() {
 
     setFilters(localFilters)
     setCurrentDeck(localDeck)
+
+    console.log('====');
+    console.log('c',currentDeck);
+    console.log('====');
 
   }
 

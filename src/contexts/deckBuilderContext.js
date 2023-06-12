@@ -34,6 +34,7 @@ export function DeckBuilderContextProvider(props) {
     useEffect(() => {
         //Current card init
         const searchFunction = async () => {
+
             const fetch = await search(filters)
             const cards = fetch.data ? await initSortCards(fetch.data) : await initSortCards(fetch)
             fetch.data ? setCurrentCards([...cards]) : setCurrentCards([cards])
@@ -45,10 +46,12 @@ export function DeckBuilderContextProvider(props) {
     useEffect(() => {
         //Current deck init
         const addCardInDeck = async () => {
-            const init = await deckBuild(currentDeck, currentCards)
+            setLoadingData(true)
+            const init = await deckBuild(currentDeck)
             const newDeck = await init.addCard(addCard)
             setCurrentDeck(newDeck)
             setAddCard()
+            setLoadingData(false)
             return newDeck
         }
         addCardInDeck()
@@ -56,7 +59,7 @@ export function DeckBuilderContextProvider(props) {
 
     useEffect(() => {
         const removeCardInDeck = async () => {
-            const init = await deckBuild(currentDeck, currentCards)
+            const init = await deckBuild(currentDeck)
             const newDeck = await init.removeCard(removeCard)
             setCurrentDeck(newDeck)
             setRemoveCard()
@@ -83,7 +86,9 @@ export function DeckBuilderContextProvider(props) {
                     setCurrentDeck,
                     setAddCard,
                     setRemoveCard
-                ]
+                ],
+                loadingData,
+                setLoadingData
             }}>
             {(!loadingData) && props.children}
         </DeckBuilderContext.Provider>

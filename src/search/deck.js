@@ -9,7 +9,7 @@ export const theDeck = {
     isInit : false
 }
 
-export async function deckBuild(deck,cards) {
+export async function deckBuild(deck) {
 
     let currentDeck
 
@@ -17,40 +17,36 @@ export async function deckBuild(deck,cards) {
 
     let mainDeck = localDeck.cards.mainDeck
 
-    function addCard(cardId) {
+    function addCard(card) {
 
-        if (cardId && localDeck.cards.numberExemple > 1) {
+        if (card) {
+
+            const cardInMainDeck = mainDeck.find(element => element.id === card['id'])
     
-            const cardInMainDeck = mainDeck.find(card => card.id === cardId)
-            
-            const isInMainDeck = cardInMainDeck ? true : false
-    
-            if (!isInMainDeck) {
-                const card = cards.find(card => card.id === cardId)
-                card.quantity = 1
+            if (!cardInMainDeck) {
+                card['quantity'] = 1
                 mainDeck.push(card)
+                return localDeck
             }
     
-            if (isInMainDeck) {
+            if (cardInMainDeck) {
+                if (localDeck.cards.numberExemple === 1) return localDeck
                 if (cardInMainDeck.quantity < 4) cardInMainDeck.quantity += 1
+                return localDeck
             }
-
-            return localDeck
+    
         }
-
         return deck
     }
 
-    function removeCard(cardId) {
-        if (cardId && localDeck.cards.numberExemple > 1) {
+    function removeCard(card) {
+        if (card) {
     
-            const cardInMainDeck = mainDeck.find(card => card.id === cardId)
-            
-            const isInMainDeck = cardInMainDeck ? true : false
+            const cardInMainDeck = mainDeck.find(element => element.id === card.id)
     
-            if (isInMainDeck) {
+            if (cardInMainDeck) {
                 if ((cardInMainDeck.quantity < 4 || cardInMainDeck.quantity === 4) && cardInMainDeck.quantity > 0) cardInMainDeck.quantity -= 1
-                if (cardInMainDeck.quantity === 0) mainDeck = mainDeck.filter((card) => card.id !== cardId)
+                if (cardInMainDeck.quantity === 0) mainDeck = mainDeck.filter((element) => element.id !== card.id)
             }
 
             localDeck.cards.mainDeck = mainDeck
