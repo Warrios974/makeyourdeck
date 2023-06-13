@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
-import { Button, Col } from 'react-bootstrap'
+import { Col } from 'react-bootstrap'
 import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
+import CardSide from './CardSide'
 
 function Sidebar() {
 
@@ -8,31 +9,33 @@ function Sidebar() {
 
   const [currentDeck, setCurrentDeck, setAddCard, setRemoveCard] = stateDeck
   
-  if (currentDeck.cards.mainDeck.length <= 1) return (
-    <Col sm={3}>
-      <aside>
-        Aucune carte dans votre deck
-      </aside>
-    </Col>
-    )
-
   const mainDeck = currentDeck.cards.mainDeck
-
+  const reserve = currentDeck.cards.reserve
+  
   return (
     <Col sm={3}>
-      <aside>
-      { mainDeck.map((card) => (
+      <aside className='d-flex flex-column'>
+      { mainDeck.length > 1 && mainDeck.map((card) => (
         card.id && 
-          <Button
+          <CardSide
           key={`${card.id}`} 
-          onClick={() => setRemoveCard(card)}
-          className='m-2'>
-            
-            <span>{card.quantity}x </span>
-            <span>{card.name}</span>
-            
-        </Button>
+          card={card}/>
         ))
+      }
+      {
+        mainDeck.length <= 1 && <span>No cards in your deck</span>
+      }
+      </aside>
+      <aside>
+      { reserve.length > 1 && mainDeck.map((card) => (
+        card.id && 
+          <CardSide
+          key={`${card.id}`} 
+          card={card}/>
+        ))
+      }
+      {
+        reserve.length <= 1 && <span>No cards in your reserve</span>
       }
       </aside>
     </Col>
