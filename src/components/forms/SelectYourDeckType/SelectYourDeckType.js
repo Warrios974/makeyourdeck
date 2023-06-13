@@ -80,10 +80,6 @@ function SelectYourDeckType() {
     setFilters(localFilters)
     setCurrentDeck(localDeck)
 
-    console.log('====');
-    console.log('c',currentDeck);
-    console.log('====');
-
   }
 
   if(!currentDeck.isInit && !isSubmitSuccessful) return  (
