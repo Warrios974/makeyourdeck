@@ -34,7 +34,7 @@ export function DeckBuilderContextProvider(props) {
     useEffect(() => {
         //Current card init
         const searchFunction = async () => {
-
+            setCurrentCards([])
             const fetch = await search(filters)
             const cards = fetch.data ? await initSortCards(fetch.data) : await initSortCards(fetch)
             fetch.data ? setCurrentCards([...cards]) : setCurrentCards([cards])
