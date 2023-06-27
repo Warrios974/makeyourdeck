@@ -30,6 +30,14 @@ function Carrousel() {
     return { rowOne, rowTwo }
   }
 
+  const handleDragOver = (e) => {
+    e.preventDefault()
+  }
+
+  const handleDrop = (e) => {
+    e.preventDefault(e)
+  }
+
   if (currentCards.length === 0 || loadingData) {
     return (
       <Col sm={9}>
@@ -57,18 +65,31 @@ function Carrousel() {
 
   return (
     <Col sm={9} className='overflow-auto'>
-      <Row className='d-flex flex-row flex-nowrap'>
+      <Row 
+        className='d-flex flex-row flex-nowrap'
+        onDragOver={(e) => handleDragOver(e)}
+        onDrop={(e) => handleDrop(e)}>
         { rowOne.map((card) => (
-            <article key={`${card.id}`} className='col-3'>
+            <article 
+              key={`${card.id}`} 
+              draggable
+              className='col-3'>
               <Card 
                 card={card}  />
             </article>
           ))
         }
       </Row>
-      <Row className='d-flex flex-row flex-nowrap'>
+      <Row 
+        className='d-flex flex-row flex-nowrap'
+        onDrop={(e) => handleDrop(e)}
+        onDragOver={(e) => handleDragOver(e)}>
+        
         { rowTwo.map((card) => (
-            <article key={`${card.id}`} className='col-3'>
+            <article 
+            key={`${card.id}`} 
+            draggable
+            className='col-3'>
               <Card 
                 card={card}  />
             </article>

@@ -12,7 +12,6 @@ function CardSide({ card }) {
   return (
     <div>
     <Button
-        key={`${card.id}`} 
         onClick={() => setRemoveCard(card)}
         className='m-2'>
         

@@ -9,6 +9,11 @@ function Card(props) {
   const { card } = props
 
   const [ currentDeck, setCurrentDeck, setAddCard, setRemoveCard ] = stateDeck
+
+  const handleDrapStart = (e, card) => {
+    const stringCard = JSON.stringify(card)
+    e.dataTransfer.setData("object", stringCard);
+  }
       
     const fatoryCard = (layout) => {
 
@@ -49,7 +54,9 @@ function Card(props) {
                 alt={card.name} 
                 id={card.id}
                 loading='lazy'
-                onClick={() => setAddCard(card)} />
+                onClick={() => setAddCard(card)} 
+                onDragStart={(e) => handleDrapStart(e, card)}
+                />
           </>
         )
       }
