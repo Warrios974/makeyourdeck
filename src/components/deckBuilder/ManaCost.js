@@ -1,4 +1,5 @@
 import React from 'react'
+import style from "./ManaCost.module.css";
 
 function ManaCost({ manaCost }) {
 
@@ -7,10 +8,14 @@ function ManaCost({ manaCost }) {
   const costList = manaCost.match(regex)
   
   return (
-    <span>
+    <span className={style.manaContainer}>
       {
-        costList.map((mana) => (
-          <img alt='' src={`./assets/icons/${mana}.svg`} />
+        costList.map((mana, index) => (
+          <img 
+            alt='' 
+            src={`./assets/icons/${mana}.svg`}  
+            className={style.manaImage} 
+            key={index}/>
         ))
       }
     </span>

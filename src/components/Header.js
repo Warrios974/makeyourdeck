@@ -1,10 +1,11 @@
 import React from 'react'
 import NavBarUI from './NavBarUI'
 import { Col } from 'react-bootstrap'
+import style from './Header.module.css'
 
 function Header() {
   return (
-    <Col xs={1} className='sidebar bg-dark d-flex flex-column justify-content-center' fixed="top">
+    <Col xs={1} className={`${style.headerContainer} bg-dark d-flex flex-column justify-content-center`}>
       <header>
         <div>
           <NavBarUI />

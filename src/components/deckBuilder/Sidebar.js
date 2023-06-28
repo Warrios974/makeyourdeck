@@ -21,7 +21,7 @@ function Sidebar() {
   }
   
   if (currentDeck.cards.mainDeck.length <= 1) return (
-    <Col sm={3}>
+    <Col sm={4}>
       <aside
         onDragOver={(e) => handleDragOver(e)}
         onDrop={(e) => handleDrop(e)}>
@@ -33,7 +33,7 @@ function Sidebar() {
   const mainDeck = currentDeck.cards.mainDeck
   
   return (
-    <Col sm={3}>
+    <Col sm={4}>
       <aside 
         className='d-flex flex-column'
         onDragOver={(e) => handleDragOver(e)}

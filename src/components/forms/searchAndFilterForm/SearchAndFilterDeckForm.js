@@ -11,6 +11,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { Col, Form, InputGroup, ListGroup, Row } from 'react-bootstrap';
 import { DeckBuilderContext } from '../../../contexts/deckBuilderContext';
+import style from './searchAndFilterForm.module.css'
+import formStyle from '../Form.module.css'
 
 library.add(faXmark)
 
@@ -213,71 +215,72 @@ function SearchAndFilterForm() {
   return (
     <Form>
       <Form.Group>
-        <Row className="mb-3">
+          <Row className='my-3'>
+            <Form.Group as={Col} controlId="formGridName" className='position-relative'>
+              <Form.Label>Name</Form.Label>
+              <InputGroup>
+                <Form.Control type='text' onChange={(e) => searchCardName(e.target.value)}/>
+                  <ListGroup className='position-absolute'>
+                    { listNameCard.length > 0 && listNameCard.map((name) => (
+                      <ListGroup.Item action key={name} onClick={(e) => addAFilter(e,'name',name)}>
+                      {name}
+                      </ListGroup.Item>
+                      ))
+                    }
+                  </ListGroup>
+                <InputGroup.Text onClick={(e) => removeCardName()}>
+                  <FontAwesomeIcon icon="fa-solid fa-xmark" />
+                  </InputGroup.Text>
+              </InputGroup>
+            </Form.Group>
 
-        <Form.Group as={Col} controlId="formGridName" className='position-relative'>
-            <Form.Label>Name</Form.Label>
-            <InputGroup>
-              <Form.Control type='text' onChange={(e) => searchCardName(e.target.value)}/>
-                <ListGroup className='position-absolute'>
-                  { listNameCard.length > 0 && listNameCard.map((name) => (
-                    <ListGroup.Item action key={name} onClick={(e) => addAFilter(e,'name',name)}>
-                    {name}
-                    </ListGroup.Item>
-                    ))
-                  }
-                </ListGroup>
-              <InputGroup.Text onClick={(e) => removeCardName()}>
-                <FontAwesomeIcon icon="fa-solid fa-xmark" />
-                </InputGroup.Text>
-            </InputGroup>
-          </Form.Group>
+            <Form.Group as={Col} controlId="formGridSearchDescription">
+              <Form.Label>Search in description</Form.Label>
+              <Form.Control type='text' onChange={(e) => addAFilter(e,'oracle',e.target.value)}/>
+            </Form.Group>
 
-          <Form.Group as={Col} controlId="formGridSearchDescription">
-            <Form.Label>Search in description</Form.Label>
-            <Form.Control type='text' onChange={(e) => addAFilter(e,'oracle',e.target.value)}/>
-          </Form.Group>
+            <Form.Group as={Col} controlId="formGridType">
+              <Form.Label>Type</Form.Label>
+              <Form.Select defaultValue="Choose..." onChange={(e) => addAFilter(e,'type',e.target.value)}>
+                <option>Choose a type ...</option>
+                { typeList.map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))
+                }
+              </Form.Select>
+            </Form.Group>
+          </Row>
+          <Row className='my-3'>
+            <Form.Group as={Col} controlId="formGridRarity">
+                { rariryList.map((rarity) => (
+                    <Col 
+                      key={rarity.name} 
+                      onClick={(e) => addAFilter(e,'rarity',rarity.value)}
+                      className='btn btn__mana'
+                    >
+                      {rarity.name}
+                    </Col>
+                  ))
+                }
+            </Form.Group>
 
-          <Form.Group as={Col} controlId="formGridType">
-            <Form.Label>Type</Form.Label>
-            <Form.Select defaultValue="Choose..." onChange={(e) => addAFilter(e,'type',e.target.value)}>
-              <option>Choose a type ...</option>
-              { typeList.map((name) => (
-                  <option key={name} value={name}>
-                    {name}
-                  </option>
-                ))
-              }
-            </Form.Select>
-          </Form.Group>
-          <Form.Group as={Col} controlId="formGridRarity">
-              { rariryList.map((rarity) => (
-                  <Col 
-                    key={rarity.name} 
-                    onClick={(e) => addAFilter(e,'rarity',rarity.value)}
-                    className='btn btn__mana'
-                  >
-                    {rarity.name}
-                  </Col>
-                ))
-              }
-          </Form.Group>
-
-          <Form.Group as={Col} controlId="formGridColors" className='d-flex align-items-end'>
-            <Row>
-              { manaObject.map((color) => (
-                  <Col 
-                    key={color.name} 
-                    onClick={(e) => addAFilter(e,'color',color.name)}
-                    className='btn btn__mana'
-                  >
-                    {color.component}
-                  </Col>
-                ))
-              }
-            </Row>
-          </Form.Group>
-        </Row>
+            <Form.Group as={Col} controlId="formGridColors" className='d-flex align-items-end'>
+              <Row className={`${style.groupeColor}`}>
+                { manaObject.map((color) => (
+                    <Col 
+                      key={color.name} 
+                      onClick={(e) => addAFilter(e,'color',color.name)}
+                      className='btn btn__mana'
+                    >
+                      {color.component}
+                    </Col>
+                  ))
+                }
+              </Row>
+            </Form.Group>
+          </Row>
       </Form.Group>
     </Form>
   )

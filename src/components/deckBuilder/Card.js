@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
 import { Col } from 'react-bootstrap'
+import style from './Card.module.css'
 
 function Card(props) {
   
@@ -28,7 +29,7 @@ function Card(props) {
           <>
               <Col 
               onClick={() => setAddCard(card)}
-              className='position-relative'
+              className={style.doubleCardsContainer}
               key={`${card.id}-container`} 
               >
               { carddoubleFaces.map((element, index) => (

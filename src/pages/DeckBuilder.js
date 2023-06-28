@@ -16,7 +16,7 @@ function DeckBuilder() {
     if (currentCards === []) return <main className='main'>Loading...</main>
 
     return (
-        <div>
+        <>
             <SelectYourDeckType />
             <SearchAndFilterDeckForm />
             <h2>Carrousel</h2>
@@ -26,7 +26,7 @@ function DeckBuilder() {
                     currentDeck={currentDeck}
                 />
             </Row>
-        </div>
+        </>
     )
 }
 
