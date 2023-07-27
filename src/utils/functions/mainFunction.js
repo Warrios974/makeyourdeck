@@ -1,6 +1,4 @@
-export const isCommanderDeck = (deck) => {
-
-    const deckType = deck.type
+export const isCommanderDeck = (type) => {
 
     const typeCommanderDeck = ['commander', 'duel', 'brawl', 'oathbreaker']
 
@@ -8,7 +6,7 @@ export const isCommanderDeck = (deck) => {
 
     for (let index = 0; index < typeCommanderDeck.length; index++) {
         const element = typeCommanderDeck[index];
-        if (element === deckType) {
+        if (element === type) {
             isCommadnerDeck = true
         }
     }

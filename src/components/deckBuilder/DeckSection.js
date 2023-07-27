@@ -13,7 +13,7 @@ function DeckSection() {
     const [isCommander, setIsCommander] = useState()
 
     useEffect(() => {
-        setIsCommander(isCommanderDeck(currentDeck))
+        setIsCommander(isCommanderDeck(currentDeck.type))
     }, [])
 
     return (
