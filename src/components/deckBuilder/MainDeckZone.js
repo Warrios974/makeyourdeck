@@ -17,23 +17,19 @@ function MainDeckZone() {
       setCurrentSelect('mainDeck')
   }
 
-  console.log('====');
-  console.log('mainDeck',mainDeck);
-  console.log('====');
-
   if(mainDeck) return (
     <Col md={8} className={currentSelect === 'mainDeck' ? 'border border-dark text-center' : 'text-center'} onClick={() => handleClick()}>
         <h5>MainDeckZone</h5>
-          {
-                mainDeck.map((card, index) => (
-                  <article key={`${index}-${card.id}`}>
-                    <Card 
-                      card={card}
-                      onClick={() => setRemoveCard({card, from: "mainDeck"})}
-                      />
-                  </article>
-                ))
+          <div>
+            {
+              mainDeck.map((card, index) => (
+                <Card 
+                  key={`${index}-${card.id}`}
+                  card={card}
+                  />
+              ))
             }
+          </div>
     </Col>
   )
 }
