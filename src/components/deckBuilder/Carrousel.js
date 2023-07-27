@@ -70,13 +70,9 @@ function Carrousel() {
         onDragOver={(e) => handleDragOver(e)}
         onDrop={(e) => handleDrop(e)}>
         { rowOne.map((card) => (
-            <article 
-              key={`${card.id}`} 
-              draggable
-              className='col-3'>
               <Card 
+                key={`${card.id}`} 
                 card={card}  />
-            </article>
           ))
         }
       </Row>
@@ -86,13 +82,9 @@ function Carrousel() {
         onDragOver={(e) => handleDragOver(e)}>
         
         { rowTwo.map((card) => (
-            <article 
-            key={`${card.id}`} 
-            draggable
-            className='col-3'>
               <Card 
+                key={`${card.id}`} 
                 card={card}  />
-            </article>
           ))
         }
       </Row>
