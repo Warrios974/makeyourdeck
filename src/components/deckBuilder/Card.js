@@ -5,11 +5,12 @@ import style from './Card.module.css'
 
 function Card(props) {
   
-  const { stateDeck } = useContext(DeckBuilderContext)
+  const { stateCurrentCards, stateNextPage, stateFilters, stateDeck, stateCurrentSelect } = useContext(DeckBuilderContext)
 
   const { card } = props
 
   const [ currentDeck, setCurrentDeck, setAddCard, setRemoveCard ] = stateDeck
+  const [ currentSelect ] = stateCurrentSelect
 
   const handleDrapStart = (e, card) => {
     const stringCard = JSON.stringify(card)

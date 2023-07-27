@@ -35,12 +35,12 @@ function Carrousel() {
   }
 
   const handleDrop = (e) => {
-    e.preventDefault(e)
+    e.preventDefault()
   }
 
   if (currentCards.length === 0 || loadingData) {
     return (
-      <Col sm={8}>
+      <Col sm={12}>
         <Row className='overflow-auto' style={{height: "40rem"}}>
           Loading
         </Row>
@@ -64,7 +64,7 @@ function Carrousel() {
   seperateCards()
 
   return (
-    <Col sm={8} className='overflow-auto'>
+    <Col sm={12} className='overflow-auto'>
       <Row 
         className='d-flex flex-row flex-nowrap'
         onDragOver={(e) => handleDragOver(e)}

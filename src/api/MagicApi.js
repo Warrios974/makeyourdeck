@@ -35,6 +35,22 @@ export const getAutocomplete = async (value) => {
 
 }
 
+export const getCard = async (value) => {
+
+  const newValue = encodeURIComponent(value)
+
+  const uri = UrlAPI + 'cards/named?exact='
+
+  const url = uri + newValue
+
+  const call = await fetch(url)
+
+  const card = await call.json()
+
+  return card
+
+}
+
 export const initSortCards = (data) => {
   
   if (data && data.length > 2) {

@@ -1,9 +1,14 @@
 import React, { useContext } from 'react'
+import { library } from '@fortawesome/fontawesome-svg-core'
 import { Button, Form, Modal } from 'react-bootstrap'
 import { DeckBuilderContext } from '../../../contexts/deckBuilderContext'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import * as yup from "yup";
+import { deckBuild } from '../../../search/deck'
+
+library.add(faXmark)
 
 const schema = yup.object({
   name: yup.string().matches(/^[a-zA-Z0-9 ]+$/i, 'Is not in correct format').min(3).required(),
@@ -20,14 +25,15 @@ function SelectYourDeckType() {
 
   const { isSubmitting, isSubmitSuccessful } = formState
 
-  const { stateFilters, stateDeck } = useContext(DeckBuilderContext)
+  const { stateFilters, stateDeck, stateCurrentSelect, getAutocompleteList, getSingleCard } = useContext(DeckBuilderContext)
   
   const [filters, setFilters] = stateFilters
+  const [currentSelect, setCurrentSelect] = stateCurrentSelect
   const [currentDeck, setCurrentDeck] = stateDeck
 
   const formatsList = ['standard','commander', 'modern', 'vintage', 'brawl','duel']
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
 
     const name = data.name
     const format = data.format
@@ -38,44 +44,24 @@ function SelectYourDeckType() {
 
     let localDeck = JSON.parse(JSON.stringify(currentDeck))
     localDeck.name = name
-    localDeck.type = format
     localDeck.public = isPublic
     
-    if (!localDeck.isInit && localDeck.type !== null) {
-
-      const sixty = ['vintage','standard','modern']
-      const hundred = ['commander','brawl','duel']
-
-      const isSixty = sixty.find((element) => element === format) ? true : false
-      const isHundred = hundred.find((element) => element === format) ? true : false
-
-      if (isSixty) {
-
-          let localCards = {
-              mainDeck : [{total : 60}],
-              reserve : [{total : 15}],
-              numberExemple : 4
-          } 
-
-          localDeck.cards = localCards
+    if (!localDeck.isInit) {
+      
+      localDeck.type = format
+      const deck = await deckBuild(localDeck)
+      localDeck = await deck.initDeck(name, format)
+      
+      const isCommanderDeck = localDeck.cards.commander === null ? false : true
+      if (isCommanderDeck) {
+        localDeck.isInit = false
+        setCurrentSelect('commander')
+        localFilters.types.legendary = true
+        localFilters.types.creature = true
       }
+      if (!isCommanderDeck) localDeck.isInit = true
 
-      if (isHundred) {
-
-          let localCards = {
-              commander : [],
-              mainDeck : [{total : 100}],
-              reserve : null,
-              numberExemple : 1
-          } 
-
-          localDeck.cards = localCards
-
-      }
-
-      localDeck.isInit = true
-
-  }
+    }
 
     setFilters(localFilters)
     setCurrentDeck(localDeck)
@@ -83,50 +69,47 @@ function SelectYourDeckType() {
   }
 
   if(!currentDeck.isInit && !isSubmitSuccessful) return  (
-    <div className='modal show' style={{display : 'block'}}>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <Modal.Dialog>
-          <Modal.Header>
-            <Modal.Title>Init your deck</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form.Label>Deck name</Form.Label>
-            <Form.Control 
-              type="text" 
-              placeholder="Gruul Aggro"
-              className='my-3'
-              name='Name'
-              {...register('name')}
-              defaultValue={'Gruul Agro'}
-              />
-              {errors.name && <span>{errors.name.message}</span>}
-            <Form.Select 
-              aria-label="Default select example" 
-              className='my-3'
-              {...register('format')}
-              defaultValue={'standard'}
-              >
-              <option>Select your format</option>
-                { formatsList.map((format) => (
-                    <option key={format} value={format}>{format}</option>
-                  ))
-                }
-            </Form.Select>
-              {errors.format && <span>{errors.format.message}</span>}
-            <Form.Check // prettier-ignore
-              type="switch"
-              id="plublic-or-private"
-              label="Public"
-              {...register('isPublic')}
-              defaultChecked={true}
-            />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button disabled={isSubmitting} variant="primary" type="submit">Create</Button>
-          </Modal.Footer>
-        </Modal.Dialog>
-      </Form>
-    </div>
+    <Form onSubmit={handleSubmit(onSubmit)}>
+      <h1>Init your deck</h1>
+      <Form.Group controlId="deckName" >
+        <Form.Label>Deck name</Form.Label>
+        <Form.Control 
+          type="text" 
+          placeholder="Gruul Aggro"
+          className='my-3'
+          name='Name'
+          {...register('name')}
+          defaultValue={'Gruul Agro'}
+          />
+          {errors.name && <span>{errors.name.message}</span>}
+      </Form.Group>
+      <Form.Group>
+        <Form.Label>Choisi ton format</Form.Label>
+        <Form.Select 
+          aria-label="Default select example" 
+          className='my-3'
+          {...register('format')}
+          defaultValue={'standard'}
+          >
+          <option>Select your format</option>
+            { formatsList.map((format) => (
+                <option key={format} value={format}>{format}</option>
+              ))
+            }
+        </Form.Select>
+          {errors.format && <span>{errors.format.message}</span>}
+      </Form.Group>
+      <Form.Group>
+        <Form.Check // prettier-ignore
+          type="switch"
+          id="plublic-or-private"
+          label="Public"
+          {...register('isPublic')}
+          defaultChecked={true}
+        />
+      </Form.Group>
+      <Button disabled={isSubmitting} variant="primary" type="submit" >Create</Button>
+    </Form>
   )
 }
 

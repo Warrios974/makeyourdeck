@@ -1,3 +1,5 @@
+import { getCards } from "../api/MagicApi"
+
 export const theDeck = {
     name: null,
     author : null,
@@ -9,23 +11,164 @@ export const theDeck = {
     isInit : false
 }
 
+export const formatRoleDeck = {
+    standard: {
+        totalDeckCard : 60,
+        reserveDeckCard: 15,
+        commander: false,
+        signature: false,
+        numberCopy: 4
+    },
+    modern : {
+        totalDeckCard : 60,
+        reserveDeckCard: 15,
+        commander: false,
+        signature: false,
+        numberCopy: 4
+    },
+    vintage : {
+        totalDeckCard : 60,
+        reserveDeckCard: 15,
+        commander: false,
+        signature: false,
+        numberCopy: 4
+    },
+    brawl : {
+        totalDeckCard : 60,
+        reserveDeckCard: 0,
+        commander: true,
+        signature: false,
+        numberCopy: 1
+    },
+    commander : {
+        totalDeckCard : 100,
+        reserveDeckCard: 0,
+        commander: true,
+        signature: false,
+        numberCopy: 1
+    },
+    duel : {
+        totalDeckCard : 100,
+        reserveDeckCard: 0,
+        commander: true,
+        signature: false,
+        numberCopy: 1
+    }
+}
+
 export async function deckBuild(deck) {
 
-    let currentDeck
+    const decktype = deck.type
 
     let localDeck = JSON.parse(JSON.stringify(deck))
 
-    let mainDeck = localDeck.cards.mainDeck
+    function initDeck(name, format){
 
-    function addCard(card) {
+        const nameDeck = name
+        const formatDeck = format
 
-        if (card) {
+        localDeck.name = nameDeck
+        
+        const roles = JSON.parse(JSON.stringify(formatRoleDeck[formatDeck]))
 
-            const cardInMainDeck = mainDeck.find(element => element.id === card['id'])
+        let localCards = {
+            commander : null,
+            signature : null,
+            mainDeck : null,
+            reserve : null,
+            numberExemple : null
+        }
+
+        if (roles.totalDeckCard) localCards.mainDeck = {cards: [], total : roles.totalDeckCard}
+        if (roles.reserveDeckCard) localCards.reserve = {cards: [], total : roles.reserveDeckCard}
+        if (roles.commander) localCards.commander = {type: null, cards: []}
+        if (roles.signature) localCards.signature = []
+        if (roles.numberCopy) localCards.numberExemple = roles.numberCopy
+
+        localDeck.cards = localCards
+        
+        return localDeck
+    }
+
+    async function addCard(card, typeSelect) {
+
+        const currentCard = card
+        
+        let commanderCard = localDeck.cards.commander.cards
+
+        let commanderType = localDeck.cards.commander.type
+
+        let mainDeck = localDeck.cards.mainDeck.cards
+
+        if (typeSelect === 'commander' && currentCard) {
+            
+            //si un deck commander car i peut etre un autre deck
+            if (decktype === 'commander' || decktype === 'brawl') {
+
+                const typeCommander = checkCommanderType(currentCard)
+                const commanderCardName = currentCard.name
+
+                if (isCommanderCard(currentCard) && commanderCard.length === 0 && commanderType === null) {
+
+                    // if (typeCommander === "Partner with") {
+                    //     const getHerPartner = currentCard.all_parts.find((card) => (card.name !== commanderCardName && card.component === 'combo_piece') )
+                    //     //const herPartnerUri = getHerPartner.uri
+                    //     //const herPatner = await getCards(herPartnerUri)
+                    //     commanderCard.push(currentCard)
+                    //     //commanderCard.push(herPatner)
+                    //     localDeck.cards.commander.type = typeCommander
+                    //     return localDeck
+                    // }
+
+                    localDeck.cards.commander.type = typeCommander
+                    commanderCard.push(currentCard)
+                    return localDeck
+                }
+
+                if (commanderType === "Partner with" && commanderCard.length < 2) {
+                    const getHerPartner = commanderCard[0].all_parts.find((card) => (card.name !== commanderCard[0].name && card.component === 'combo_piece') )
+                    const namePartner = getHerPartner.name
+                    if (commanderCardName !== namePartner) {
+                        return localDeck
+                    }
+                    if (commanderCardName === namePartner) {
+                        commanderCard.push(currentCard)
+                        return localDeck
+                    }
+                }
+
+                if (typeCommander === "Partner with" && commanderCard[0]) {
+                    return localDeck
+                }
+
+                const commanderCardInDeckName = (commanderCard[0] && commanderCard[0].name) ? commanderCard[0].name : ''
+
+                if (commanderCardName === commanderCardInDeckName) {
+                    return localDeck
+                }
+
+                if (commanderType === 'normal') {
+                    return localDeck
+                }
+
+                if (commanderCard.length === 2) {
+                    return localDeck
+                }
+
+                commanderCard.push(currentCard)
+                return localDeck
+            }
+        }
+        
+        if (typeSelect === 'mainDeck' && currentCard) {
+            const cardInMainDeck = mainDeck.find(element => element.id === currentCard['id'])
     
+            if (decktype === 'commander' || decktype === 'brawl') {
+
+            }
             if (!cardInMainDeck) {
-                card['quantity'] = 1
-                mainDeck.push(card)
+                currentCard['quantity'] = 1
+                mainDeck.push(currentCard)
                 return localDeck
             }
     
@@ -34,31 +177,94 @@ export async function deckBuild(deck) {
                 if (cardInMainDeck.quantity < 4) cardInMainDeck.quantity += 1
                 return localDeck
             }
-    
         }
-        return deck
+        
+        if (typeSelect === 'reserve' && currentCard) {
+            
+        }
+
+        return localDeck
     }
 
-    function removeCard(card) {
-        if (card) {
+    function removeCard(card, typeSelect) {
+        
+        let mainDeck = localDeck.cards.mainDeck.cards
+
+        let cardId = card.id
+
+        if (card && typeSelect === "mainDeck") {
     
-            const cardInMainDeck = mainDeck.find(element => element.id === card.id)
+            const cardInMainDeck = mainDeck.find(element => element.id === cardId)
     
             if (cardInMainDeck) {
                 if ((cardInMainDeck.quantity < 4 || cardInMainDeck.quantity === 4) && cardInMainDeck.quantity > 0) cardInMainDeck.quantity -= 1
                 if (cardInMainDeck.quantity === 0) mainDeck = mainDeck.filter((element) => element.id !== card.id)
             }
 
-            localDeck.cards.mainDeck = mainDeck
+            localDeck.cards.mainDeck.cards = mainDeck
 
             return localDeck
         }
+        
+        if (card && typeSelect === "commander") {
 
-        return deck
+            let commander = localDeck.cards.commander
+
+            const cardInMainDeck = commander.cards.find(element => element.id === cardId)
+    
+            if (cardInMainDeck) {
+                commander.cards = commander.cards.filter((element) => element.id !== cardId)
+            }
+
+            if (commander.cards.length === 0) {
+                commander.type = null
+            }
+        }
+
+        return localDeck
+    }
+
+
+    function isCommanderCard(card) {
+
+        const type = card.type_line
+
+        const isLegendary = (type && type.includes('Legendary Creature')) ? true : false
+
+        const isLegal = (isLegendary && card.legalities[decktype]) === 'legal' ? true : false
+
+        if (isLegendary && isLegal) {
+            return true
+        }
+
+        return false
+    }
+
+
+    function checkCommanderType(card) {
+
+        const isPartner = card.keywords.find((keyword) => keyword === "Partner") 
+        const isPartnerWith = card.keywords.find((keyword) => keyword === "Partner with")
+        const isFriendForever = card.keywords.find((keyword) => keyword === "Friends forever")
+        
+
+        if (isPartnerWith) {
+            return "Partner with"
+        }
+        
+        if (isPartner) {
+            return "Partner"
+        }
+        
+        if (isFriendForever) {
+            return "Friends forever"
+        }
+
+        return "normal"
     }
 
     return {
-        currentDeck,
+        initDeck,
         addCard,
         removeCard
     }

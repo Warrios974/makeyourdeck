@@ -38,7 +38,8 @@ export const theFilter = {
         enchantment : false,
         artifact : false,
         land : false,
-        battle : false
+        battle : false,
+        legendary : false
     }
 }
 
@@ -89,7 +90,7 @@ export async function search(filter){
     const cards = await getCards(url)
 
     //functions
-    function addAndConcatener(type,table,filter) {
+    function orConditionSearch(table,filter) {
         
         let URI = ''
         
@@ -121,6 +122,27 @@ export async function search(filter){
         return URI
     }
 
+    function andConditionSearch(table,filter) {
+        
+        let URI = ''
+
+        let list = []
+
+        console.log('====');
+        console.log('filter',filter);
+        console.log('====');
+        
+        table.forEach(element => {
+            if(filter[element[0]] === true) list.push(encodeURIComponent(element[1]))
+        });
+        
+        list.forEach((element) => {
+            URI = URI + '+' + element
+        });
+
+        return URI
+    }
+
     function createURIColors(){
 
         const colorsFilter = filter.colors
@@ -135,7 +157,7 @@ export async function search(filter){
             ['multicolor', 'c:m']
         ]
 
-        const colorsURI = addAndConcatener('color',colors,colorsFilter)
+        const colorsURI = orConditionSearch(colors,colorsFilter)
 
         if(!colorsURI) return ''
 
@@ -154,7 +176,7 @@ export async function search(filter){
             ['mythic', 'r:mythic']
         ]
         
-        const raritiesURI = addAndConcatener('rarity',rarities,raritiesFilter)
+        const raritiesURI = orConditionSearch(rarities,raritiesFilter)
 
         if(!raritiesURI) return ''
 
@@ -174,10 +196,11 @@ export async function search(filter){
             ['enchantment', 't:enchantment'],
             ['artifact', 't:artifact'],
             ['land', 't:land'],
-            ['battle', 't:battle']
+            ['battle', 't:battle'],
+            ['legendary', 't:legendary']
         ]
         
-        const typesURI = addAndConcatener('type',types,typesFilter)
+        const typesURI = andConditionSearch(types,typesFilter)
 
         if(!typesURI) return ''
 
@@ -196,7 +219,7 @@ export async function search(filter){
             ['color', 'order:color']
         ]
         
-        const orderURI = addAndConcatener('order',order,orderFilter)
+        const orderURI = orConditionSearch(order,orderFilter)
         
         if(!orderURI) return ''
 
@@ -217,7 +240,7 @@ export async function search(filter){
             ['duel', 'f:duel']
         ]
         
-        const orderURI = addAndConcatener('formats',formats,formatsFilter)
+        const orderURI = orConditionSearch(formats,formatsFilter)
         
         if(!orderURI) return ''
 
