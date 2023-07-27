@@ -17,57 +17,75 @@ function Card(props) {
     e.dataTransfer.setData("object", stringCard);
   }
       
-    const fatoryCard = (layout) => {
+  const FatoryCard = ({ layout }) => {
 
-      const conditionDoubleFaces = layout === 'transform' || layout === 'modal_dfc' || layout === 'double_faced_token' || layout === 'art_series ' || layout === 'reversible_card '
-      const conditionSingleFaces = layout !== 'transform' || layout !== 'modal_dfc' || layout !== 'double_faced_token' || layout !== 'art_series ' || layout !== 'reversible_card '
+    const conditionDoubleFaces = layout === 'transform' || layout === 'modal_dfc' || layout === 'double_faced_token' || layout === 'art_series ' || layout === 'reversible_card '
+    const conditionSingleFaces = layout !== 'transform' || layout !== 'modal_dfc' || layout !== 'double_faced_token' || layout !== 'art_series ' || layout !== 'reversible_card '
 
-      if (conditionDoubleFaces) {
+    if (conditionDoubleFaces) {
 
-        const carddoubleFaces = card.card_faces
+      const carddoubleFaces = card.card_faces
 
-        return (
-          <>
-              <Col 
-              onClick={() => setAddCard(card)}
-              className={style.doubleCardsContainer}
-              key={`${card.id}-container`} 
-              >
-              { carddoubleFaces.map((element, index) => (
-                <img 
-                  className='img-fluid img-thumbnail position-absolute'
-                  src={element.image_uris['normal']} 
-                  alt={element.name}
-                  loading='lazy'
-                  key={`${index}-${card.id}-image`} 
-                  />
-                  ))
-                }
-              </Col>
-          </>
-        )
-      }
-      if (conditionSingleFaces) {
-        return (
-          <>
+      return (
+        <Col>
+            <Col 
+            onClick={() => setAddCard(card)}
+            className={style.doubleCardsContainer}
+            key={`${card.id}-container`} 
+            >
+            { carddoubleFaces.map((element, index) => (
               <img 
-                className='img-fluid img-thumbnail'
-                src={card.image_uris['normal']} 
-                alt={card.name} 
-                id={card.id}
+                className='img-fluid img-thumbnail position-absolute'
+                src={element.image_uris['normal']} 
+                alt={element.name}
                 loading='lazy'
-                onClick={() => setAddCard(card)} 
-                onDragStart={(e) => handleDrapStart(e, card)}
+                key={`${index}-${card.id}-image`} 
                 />
-          </>
-        )
-      }
-
+                ))
+              }
+            </Col>
+        </Col>
+      )
     }
+
+    if (conditionSingleFaces) {
+      return (
+        <Col>
+            <img 
+              className='img-fluid img-thumbnail'
+              src={card.image_uris['normal']} 
+              alt={card.name} 
+              id={card.id}
+              loading='lazy'
+              onClick={() => setAddCard(card)} 
+              onDragStart={(e) => handleDrapStart(e, card)}
+              />
+        </Col>
+      )
+    }
+
+  }
+
+
 
   if (card === []) return <div>Loading...</div>
   
-  return fatoryCard(card.layout)
+  return (
+    <article  
+      draggable
+      className={`col-3`}
+    >
+      <div
+          className={`${style.cardContainer}`}>
+        <div className={`${style.addOrRemoveLayout}`}>
+          <button onClick={() => setAddCard(card)}>Ajouter</button> 
+          <button onClick={() => setRemoveCard({card, from: currentSelect})}>supprimer</button>
+        </div>
+        <FatoryCard 
+          layout={card.layout}/>
+      </div>
+      {card.quantity && <span>{card.quantity}</span>}
+    </article>)
 }
 
 export default Card
