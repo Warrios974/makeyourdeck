@@ -1,4 +1,5 @@
 import { getCards } from "../api/MagicApi"
+import { isCommanderDeck } from "../utils/functions/mainFunction"
 
 export const theDeck = {
     name: null,
@@ -92,15 +93,13 @@ export async function deckBuild(deck) {
 
     async function addCard(card, typeSelect) {
 
-        const currentCard = card
-        
-        let commanderCard = localDeck.cards.commander.cards
-
-        let commanderType = localDeck.cards.commander.type
-
-        let mainDeck = localDeck.cards.mainDeck.cards
+        const currentCard = JSON.parse(JSON.stringify(card))
 
         if (typeSelect === 'commander' && currentCard) {
+            
+            let commanderCard = localDeck.cards.commander.cards
+            
+            let commanderType = localDeck.cards.commander.type
             
             //si un deck commander car i peut etre un autre deck
             if (decktype === 'commander' || decktype === 'brawl') {
@@ -161,25 +160,73 @@ export async function deckBuild(deck) {
         }
         
         if (typeSelect === 'mainDeck' && currentCard) {
-            const cardInMainDeck = mainDeck.find(element => element.id === currentCard['id'])
-    
-            if (decktype === 'commander' || decktype === 'brawl') {
 
+            let mainDeck = localDeck.cards.mainDeck.cards
+            const cardInMainDeck = mainDeck.find(element => element.id === currentCard['id'])
+
+            if (isCommanderDeck(decktype)) {
+
+                if (!cardInMainDeck) {
+                    currentCard['quantity'] = 1
+                    mainDeck.push(currentCard)
+                    return localDeck
+                }
+
+                if (cardInMainDeck) return localDeck
             }
-            if (!cardInMainDeck) {
-                currentCard['quantity'] = 1
-                mainDeck.push(currentCard)
-                return localDeck
-            }
+
+            if (!isCommanderDeck(decktype)) {
+
+                let reserveDeck = localDeck.cards.reserve !== null && localDeck.cards.reserve.cards
     
-            if (cardInMainDeck) {
-                if (localDeck.cards.numberExemple === 1) return localDeck
-                if (cardInMainDeck.quantity < 4) cardInMainDeck.quantity += 1
-                return localDeck
+                const cardInReserveDeck = reserveDeck.find(element => element.id === currentCard['id'])
+    
+                if (!cardInMainDeck) {
+                    currentCard['quantity'] = 1
+                    mainDeck.push(currentCard)
+                    return localDeck
+                }
+                
+                const cardsInMainDeck = cardInMainDeck.quantity 
+                const cardsInReservenDeck = cardInReserveDeck !== undefined ? cardInReserveDeck.quantity : 0
+    
+                const totalCopiesCard = cardsInMainDeck + cardsInReservenDeck
+        
+                if (cardInMainDeck) {
+                    if (localDeck.cards.numberExemple === 1) return localDeck
+                    if (totalCopiesCard < 4) cardInMainDeck.quantity += 1
+                    return localDeck
+                }
             }
         }
         
         if (typeSelect === 'reserve' && currentCard) {
+
+            let mainDeck = localDeck.cards.mainDeck.cards !== null && localDeck.cards.mainDeck.cards
+            let reserveDeck = localDeck.cards.reserve.cards
+
+            const cardInMainDeck = mainDeck.find(element => element.id === currentCard['id'])
+            const cardInReserveDeck = reserveDeck.find(element => element.id === currentCard['id'])
+    
+            if (decktype === 'commander' || decktype === 'brawl') {
+
+            }
+            if (!cardInReserveDeck) {
+                currentCard['quantity'] = 1
+                reserveDeck.push(currentCard)
+                return localDeck
+            }
+            
+            const cardsInMainDeck = cardInMainDeck !== undefined ? cardInMainDeck.quantity : 0
+            const cardsInReservenDeck = cardInReserveDeck.quantity
+
+            const totalCopiesCard = cardsInMainDeck + cardsInReservenDeck
+    
+            if (cardInReserveDeck) {
+                if (localDeck.cards.numberExemple === 1) return localDeck
+                if (totalCopiesCard < 4) cardInReserveDeck.quantity += 1
+                return localDeck
+            }
             
         }
 
