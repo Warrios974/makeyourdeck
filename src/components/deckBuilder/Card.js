@@ -27,23 +27,18 @@ function Card(props) {
       const carddoubleFaces = card.card_faces
 
       return (
-        <Col>
-            <Col 
-            onClick={() => setAddCard(card)}
-            className={style.doubleCardsContainer}
-            key={`${card.id}-container`} 
-            >
+        <Col
+        className={style.doubleCardsContainer}>
             { carddoubleFaces.map((element, index) => (
-              <img 
-                className='img-fluid img-thumbnail position-absolute'
-                src={element.image_uris['normal']} 
-                alt={element.name}
-                loading='lazy'
-                key={`${index}-${card.id}-image`} 
-                />
+                <img 
+                  className='img-fluid img-thumbnail position-absolute'
+                  src={element.image_uris['normal']} 
+                  key={`${index}-${card.id}-image`} 
+                  alt={element.name}
+                  loading='lazy'
+                  />
                 ))
               }
-            </Col>
         </Col>
       )
     }
@@ -57,7 +52,6 @@ function Card(props) {
               alt={card.name} 
               id={card.id}
               loading='lazy'
-              onClick={() => setAddCard(card)} 
               onDragStart={(e) => handleDrapStart(e, card)}
               />
         </Col>
@@ -71,21 +65,18 @@ function Card(props) {
   if (card === []) return <div>Loading...</div>
   
   return (
-    <article  
-      draggable
-      className={`col-3`}
-    >
-      <div
-          className={`${style.cardContainer}`}>
-        <div className={`${style.addOrRemoveLayout}`}>
-          <button onClick={() => setAddCard(card)}>Ajouter</button> 
-          <button onClick={() => setRemoveCard({card, from: currentSelect})}>supprimer</button>
-        </div>
-        <FatoryCard 
-          layout={card.layout}/>
+    <article className={`${style.cardContainer}`} >
+      <div className={`${style.addOrRemoveLayout}`}>
+        <button onClick={() => setAddCard(card)}>Ajouter</button> 
+        <button onClick={() => setRemoveCard({card, from: currentSelect})}>supprimer</button>
       </div>
-      {card.quantity && <span>{card.quantity}</span>}
-    </article>)
+      <FatoryCard 
+        layout={card.layout}/>
+      <div>
+        {card.quantity && <span>x{card.quantity}</span>}
+      </div>
+    </article>
+  )
 }
 
 export default Card
