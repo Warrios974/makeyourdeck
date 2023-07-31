@@ -13,6 +13,8 @@ import { Col, Form, InputGroup, ListGroup, Row } from 'react-bootstrap';
 import { DeckBuilderContext } from '../../../contexts/deckBuilderContext';
 import style from './searchAndFilterForm.module.css'
 import formStyle from '../Form.module.css'
+import Select from 'react-select';
+import AsyncSelect from 'react-select/async';
 
 library.add(faXmark)
 
@@ -21,60 +23,28 @@ function SearchAndFilterForm() {
   const { stateFilters, setLoadingData } = useContext(DeckBuilderContext)
 
   const [filters, setFilters] = stateFilters
-  
-  const [colorsStates, setColorsStates] = useState({
-    white : false,
-    blue : false,
-    black : false,
-    red : false,
-    green : false,
-    colorless : false,
-    multicolor : false
-  })
-  
-  const [raritiesStates, setRaritiesStates] = useState({
-    common : false,
-    uncommon : false,
-    rare : false,
-    mythic : false,
-})
 
   const [listNameCard, setListNameCard] = useState([])
   
   const inputNameCard = document.getElementById('formGridName')
 
   const typeList = [
-    'planeswalker',
-    'creature',
-    'instant',
-    'sorcery',
-    'enchantment',
-    'artifact',
-    'land',
-    'battle'
+    { value: 'planeswalker', label: 'Planeswalker' },
+    { value: 'creature', label: 'Creature' },
+    { value: 'instant', label: 'Instant' },
+    { value: 'sorcery', label: 'Sorcery' },
+    { value: 'enchantment', label: 'Enchantment' },
+    { value: 'artifact', label: 'Artifact' },
+    { value: 'land', label: 'Land' },
+    { value: 'battle', label: 'Battle' },
+    { value: 'legendary', label: 'Legendary' }
   ]
 
   const rariryList = [
-    {
-      name :'Commun',
-      value : 'common',
-      icon : ''
-    },
-    {
-      name :'Uncommun',
-      value : 'uncommon',
-      icon : ''
-    },
-    {
-      name :'Rare',
-      value : 'rare',
-      icon : ''
-    },
-    {
-      name :'Mythic',
-      value : 'mythic',
-      icon : ''
-    }
+    { value: 'common', label: 'Commun' },
+    { value: 'uncommon', label: 'Uncommun' },
+    { value: 'rare', label: 'Rare' },
+    { value: 'mythic', label: 'Mythic' }
   ]
 
   const manaObject = [
@@ -109,7 +79,7 @@ function SearchAndFilterForm() {
       component : <ColorlessManaSvg />
     },
     {
-      name :'multicolor ',
+      name :'multicolor',
       svgUrl : '../../../assets/icons/mtg/G.svg',
       component : <ColorlessManaSvg />
     }
@@ -117,121 +87,108 @@ function SearchAndFilterForm() {
 
   const addAFilter = (e,filter,value) => {
 
-    e.preventDefault()
+    e !== null && e.preventDefault()
 
     let localFilters = JSON.parse(JSON.stringify(filters))
-    let localColorsStates = { ...colorsStates }
-    let localRarityStates = { ...raritiesStates }
 
-    let localTypes = { 
-      planeswalker : false,
-      creature : false,
-      instant : false,
-      sorcery : false,
-      enchantment : false,
-      artifact : false,
-      land : false,
-      battle : false 
-    }
+    if (filter === 'color'){ 
 
-    if (filter === 'color') {
+      let colors = [...localFilters.colors]
 
-      if (localColorsStates[value] === false) {
-        localColorsStates[value] = true
+      if(localFilters.colors.includes(value)){
+        let newColors = colors.filter((color) => color !== value)
+        localFilters.colors = newColors
       }else{
-        localColorsStates[value] = false
+        localFilters.colors.push(value)
       }
 
     }
 
-    if (filter === 'oracle') {
-      localFilters.oracle = value
-    }
+    if (filter === 'oracle') localFilters.oracle = value
 
     if (filter === 'name') {
 
-      inputNameCard.value = value
       localFilters.name = value
-
       setListNameCard([])
       
     }
 
-    if (filter === 'type' ) {
+    if (filter === 'type') {
 
-      if (value === 'Choose a type ...') {
-        localFilters.types = localTypes
-      }
       if (value !== 'Choose a type ...') {
-        localTypes[value] = true
-      }
-
-      localFilters.types = localTypes
-      
-    }
-
-    if (filter === 'rarity' ) {
-
-      if (localRarityStates[value] === false) {
-        localRarityStates[value] = true
-      }else{
-        localRarityStates[value] = false
+        localFilters.types = value
       }
       
     }
 
-    if (localColorsStates !== localFilters.colors) localFilters.colors = localColorsStates
-    if (localRarityStates !== localFilters.rarities) localFilters.rarities = localRarityStates
+    if (filter === 'rarity'){
+      
+      localFilters.rarities = value
 
-    setColorsStates(localColorsStates)
-    setRaritiesStates(localRarityStates)
+    }
+
     setFilters(localFilters)
 
   }
 
-  const searchCardName = async (value) => {
+  const searchCardName = async (searchValue, callback) => {
 
-    if ((value.length >= 2 || value.length === 0)) {
+    if ((searchValue.length >= 2 || searchValue.length === 0)) {
 
-      const data = await getAutocomplete(value)
+      const data = await getAutocomplete(searchValue)
   
       const list = data.data
-  
-      setListNameCard(list)
+
+      let newList = []
+      
+      list.forEach(name => {
+        newList.push({value: name, label: name})
+      });
+
+      return newList
   
     }
   }
 
-  const removeCardName = async () => {
+  const onInputTypeChange = (data) => {
+    let list = []
 
-    let localFilters = JSON.parse(JSON.stringify(filters))
-    localFilters.name = ''
-    inputNameCard.value = ''
-    
-    setFilters(localFilters)
+    data.forEach(element => {
+      list.push(element.value)
+    });
 
-  }
+    addAFilter(null,'type',list)
+  };
+
+  const onInputNameChange = (data) => {
+    const value = data !== null ? data.value : ''
+    addAFilter(null,'name',value)
+  };
+
+  const onInputRarityChange = (data) => {
+    let list = []
+
+    data.forEach(element => {
+      list.push(element.value)
+    });
+
+    addAFilter(null,'rarity',list)
+  };
 
   return (
     <Form>
       <Form.Group>
           <Row className='my-3'>
             <Form.Group as={Col} controlId="formGridName" className='position-relative'>
-              <Form.Label>Name</Form.Label>
-              <InputGroup>
-                <Form.Control type='text' onChange={(e) => searchCardName(e.target.value)}/>
-                  <ListGroup className='position-absolute'>
-                    { listNameCard.length > 0 && listNameCard.map((name) => (
-                      <ListGroup.Item action key={name} onClick={(e) => addAFilter(e,'name',name)}>
-                      {name}
-                      </ListGroup.Item>
-                      ))
-                    }
-                  </ListGroup>
-                <InputGroup.Text onClick={(e) => removeCardName()}>
-                  <FontAwesomeIcon icon="fa-solid fa-xmark" />
-                  </InputGroup.Text>
-              </InputGroup>
+              <label htmlFor='searchByName'>Nom de la carte</label>
+              <AsyncSelect
+                onChange={onInputNameChange}
+                loadOptions={searchCardName}
+                isClearable
+                isSearchable
+                name='searchByName'
+                id='searchByName'
+              />
             </Form.Group>
 
             <Form.Group as={Col} controlId="formGridSearchDescription">
@@ -240,30 +197,33 @@ function SearchAndFilterForm() {
             </Form.Group>
 
             <Form.Group as={Col} controlId="formGridType">
-              <Form.Label>Type</Form.Label>
-              <Form.Select defaultValue="Choose..." onChange={(e) => addAFilter(e,'type',e.target.value)}>
-                <option>Choose a type ...</option>
-                { typeList.map((name) => (
-                    <option key={name} value={name}>
-                      {name}
-                    </option>
-                  ))
-                }
-              </Form.Select>
+              <label htmlFor='searchBytypes'>Type de carte</label>
+              <Select
+                closeMenuOnSelect={false}
+                onChange={onInputTypeChange}
+                isMulti
+                options={typeList}
+                isClearable
+                isSearchable
+                id='searchBytypes'
+                name="searchBytypes"
+                className='mb-3'
+              />
             </Form.Group>
           </Row>
           <Row className='my-3'>
             <Form.Group as={Col} controlId="formGridRarity">
-                { rariryList.map((rarity) => (
-                    <Col 
-                      key={rarity.name} 
-                      onClick={(e) => addAFilter(e,'rarity',rarity.value)}
-                      className='btn btn__mana'
-                    >
-                      {rarity.name}
-                    </Col>
-                  ))
-                }
+              <label htmlFor='searchByRarity'>Rareté</label>
+              <Select
+                closeMenuOnSelect={false}
+                onChange={onInputRarityChange}
+                isMulti
+                options={rariryList}
+                isClearable
+                isSearchable
+                name="searchByRarity"
+                id='searchByRarity'
+              />
             </Form.Group>
 
             <Form.Group as={Col} controlId="formGridColors" className='d-flex align-items-end'>
