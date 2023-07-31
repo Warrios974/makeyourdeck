@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import { getAutocomplete, getCard, initSortCards } from "../api/MagicApi";
 import { search, theFilter } from "../search/search";
 import { deckBuild, theDeck } from "../search/deck";
-import { multicolorsAtTheEnd } from "../utils/functions/mainFunction";
+import { sortByColors } from "../utils/functions/mainFunction";
 
 export const DeckBuilderContext = createContext();
 
@@ -61,7 +61,7 @@ export function DeckBuilderContextProvider(props) {
             setCurrentCards([])
             const fetch = await search(filters)
             const filterColor = fetch.data ? await initSortCards(fetch.data) : await initSortCards(fetch)
-            const cards = await multicolorsAtTheEnd(filterColor) 
+            const cards = await sortByColors(filterColor) 
             fetch.data ? setCurrentCards([...cards]) : setCurrentCards([cards])
             return fetch
         }

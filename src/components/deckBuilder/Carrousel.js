@@ -41,9 +41,6 @@ function Carrousel() {
     e.preventDefault()
   }
 
-  const handleWheel = (e) => {
-  }
-
   useEffect(() => {
     const addListener = () => {
       const { current } = carrousel

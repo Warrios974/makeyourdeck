@@ -51,16 +51,43 @@ export const checkCommanderType = (card) => {
     return "normal"
 }
 
-export const multicolorsAtTheEnd = (cards) => {
-    
+export const sortByColors = (cards) => {
+
+    const colors = {"W": 0, "U": 1, "B": 2, "R": 3, "G": 4, "M" : 5, "L" : 6}
+
+    const color = (card) => {
+        if (card.colors) {
+            if (card.colors.length > 1) {
+                return "M"
+            }else{
+                if (card.colors[0]) {
+                    return card.colors[0]
+                }else{
+                    return "L"
+                }
+            }
+        }else{
+            if (card.card_faces[0].colors.length > 1) {
+                return "M"
+            }else{
+                if (card.card_faces[0].colors[0]) {
+                    return card.card_faces[0].colors[0]
+                }else{
+                    return "L"
+                }
+            }
+        }
+    }
+
     const sort = (a, b) => {
 
-        const newA = a.colors ? a.colors.length : a.card_faces[1].colors.length
-        const newB = b.colors ? b.colors.length : b.card_faces[1].colors.length
+        const colorA = color(a)
+        const colorB = color(b)
 
-        return newA - newB
+        return colors[colorA] - colors[colorB]
     }
-    const sortData = cards.status === 404 ? cards : cards.sort(sort)
+
+    let sortData = cards.status === 404 ? cards : cards.sort(sort)
 
     return sortData
 }
