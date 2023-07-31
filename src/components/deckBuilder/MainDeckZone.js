@@ -1,7 +1,8 @@
 import React, { useContext } from 'react'
-import { Col } from 'react-bootstrap'
+import { Col, Row } from 'react-bootstrap'
 import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
 import Card from './Card'
+import { sortByCost } from '../../utils/functions/mainFunction'
 
 function MainDeckZone() {
 
@@ -13,6 +14,8 @@ function MainDeckZone() {
 
   const mainDeck = currentDeck.cards.mainDeck.cards
 
+  const sortDeck = sortByCost(mainDeck)
+
   const handleClick = () => {
       setCurrentSelect('mainDeck')
   }
@@ -20,16 +23,25 @@ function MainDeckZone() {
   if(mainDeck) return (
     <Col md={8} className={currentSelect === 'mainDeck' ? 'border border-dark text-center' : 'text-center'} onClick={() => handleClick()}>
         <h5>MainDeckZone</h5>
-          <div>
+        {<Row>
             {
-              mainDeck.map((card, index) => (
-                <Card 
-                  key={`${index}-${card.id}`}
-                  card={card}
-                  />
+              sortDeck.map((list, index) => (
+                <Col 
+                  md={3}
+                  key={`${index}-colum`}
+                  >
+                  {
+                    list.length > 0 && list.map((card, index) => (
+                      <Card 
+                        key={`${index}-${card.id}`}
+                        card={card}
+                        />
+                    ))
+                  }
+                </Col>
               ))
             }
-          </div>
+        </Row>}
     </Col>
   )
 }
