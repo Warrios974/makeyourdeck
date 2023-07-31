@@ -1,9 +1,10 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import Card from './Card'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import { Col, Row } from 'react-bootstrap'
 import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
+import style from './Carrousel.module.css'
 
 library.add(faChevronLeft, faChevronRight)
 
@@ -12,6 +13,8 @@ function Carrousel() {
   const { stateCurrentCards, loadingData } = useContext(DeckBuilderContext)
     
   const [currentCards] = stateCurrentCards
+
+  const carrousel = useRef()
 
   let rowOne = []
 
@@ -37,6 +40,27 @@ function Carrousel() {
   const handleDrop = (e) => {
     e.preventDefault()
   }
+
+  const handleWheel = (e) => {
+  }
+
+  useEffect(() => {
+    const addListener = () => {
+      const { current } = carrousel
+
+      if (!current) {
+         return
+      }
+
+      if (current) {
+        current.addEventListener('wheel', function(e) {
+          e.preventDefault()
+          current.scrollLeft += e.deltaY
+        }, { passive: false });
+      }
+    }
+    addListener()
+  })
 
   if (currentCards.length === 0 || loadingData) {
     return (
@@ -64,27 +88,31 @@ function Carrousel() {
   seperateCards()
 
   return (
-    <Col sm={12} className='overflow-auto'>
+    <Col 
+      sm={12} 
+      className={`overflow-auto ${style.carrouselContainer}`}
+      ref={carrousel}
+    >
       <Row 
-        className='d-flex flex-row flex-nowrap'
+        className={`d-flex flex-row flex-nowrap ${style.ligneContainer}`}
         onDragOver={(e) => handleDragOver(e)}
         onDrop={(e) => handleDrop(e)}>
         { rowOne.map((card) => (
-              <Card 
-                key={`${card.id}`} 
-                card={card}  />
+            <Card 
+              key={`${card.id}`} 
+              card={card}  />
           ))
         }
       </Row>
       <Row 
-        className='d-flex flex-row flex-nowrap'
+        className={`d-flex flex-row flex-nowrap ${style.ligneContainer}`}
         onDrop={(e) => handleDrop(e)}
         onDragOver={(e) => handleDragOver(e)}>
         
         { rowTwo.map((card) => (
-              <Card 
-                key={`${card.id}`} 
-                card={card}  />
+            <Card 
+              key={`${card.id}`} 
+              card={card}  />
           ))
         }
       </Row>
