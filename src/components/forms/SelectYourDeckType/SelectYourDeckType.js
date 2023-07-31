@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import * as yup from "yup";
-import { deckBuild } from '../../../search/deck'
+import { initDeck } from '../../../search/deck'
 
 library.add(faXmark)
 
@@ -40,7 +40,7 @@ function SelectYourDeckType() {
     const isPublic = data.isPublic
 
     let localFilters = JSON.parse(JSON.stringify(filters))
-    localFilters.formats[format] = true
+    localFilters.formats = [format]
 
     let localDeck = JSON.parse(JSON.stringify(currentDeck))
     localDeck.name = name
@@ -49,15 +49,14 @@ function SelectYourDeckType() {
     if (!localDeck.isInit) {
       
       localDeck.type = format
-      const deck = await deckBuild(localDeck)
-      localDeck = await deck.initDeck(name, format)
+      localDeck = initDeck(name, format, localDeck)
       
       const isCommanderDeck = localDeck.cards.commander === null ? false : true
       if (isCommanderDeck) {
         localDeck.isInit = false
         setCurrentSelect('commander')
-        localFilters.types.legendary = true
-        localFilters.types.creature = true
+        localFilters.types.push('legendary')
+        localFilters.types.push('creature')
       }
       if (!isCommanderDeck) localDeck.isInit = true
 

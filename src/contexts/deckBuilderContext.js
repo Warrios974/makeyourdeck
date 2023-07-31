@@ -2,6 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import { getAutocomplete, getCard, initSortCards } from "../api/MagicApi";
 import { search, theFilter } from "../search/search";
 import { deckBuild, theDeck } from "../search/deck";
+import { multicolorsAtTheEnd } from "../utils/functions/mainFunction";
 
 export const DeckBuilderContext = createContext();
 
@@ -59,7 +60,8 @@ export function DeckBuilderContextProvider(props) {
         const searchFunction = async () => {
             setCurrentCards([])
             const fetch = await search(filters)
-            const cards = fetch.data ? await initSortCards(fetch.data) : await initSortCards(fetch)
+            const filterColor = fetch.data ? await initSortCards(fetch.data) : await initSortCards(fetch)
+            const cards = await multicolorsAtTheEnd(filterColor) 
             fetch.data ? setCurrentCards([...cards]) : setCurrentCards([cards])
             return fetch
         }
@@ -71,8 +73,8 @@ export function DeckBuilderContextProvider(props) {
         const addCardInDeck = async () => {
             if (addCard) {
                 setLoadingData(true)
-                const init = await deckBuild(currentDeck)
-                const newDeck = await init.addCard(addCard, currentSelect)
+                const init = deckBuild(currentDeck)
+                const newDeck = init.addCard(addCard, currentSelect)
                 setCurrentDeck(newDeck)
                 setAddCard()
                 setLoadingData(false)
