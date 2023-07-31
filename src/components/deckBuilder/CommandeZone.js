@@ -1,25 +1,34 @@
 import React, { useContext } from 'react'
 import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
 import { Col } from 'react-bootstrap'
+import Card from './Card'
 
 function CommandeZone() {
     
-    const { stateDeck } = useContext(DeckBuilderContext)
+
+    const { stateCurrentCards, stateNextPage, stateFilters, stateDeck, stateCurrentSelect } = useContext(DeckBuilderContext)
+
+    const [currentSelect, setCurrentSelect] = stateCurrentSelect
 
     const [currentCards, setCurrentDeck, setAddCard, setRemoveCard] = stateDeck
 
     const commander = currentCards.cards.commander.cards
+
+    const handleClick = () => {
+        setCurrentSelect('commander')
+    }
     
     //if(commander.type !== null) return <div>Choisi ton commandant</div>
   
     if(commander) return (
-        <Col md={2} className='text-center'>
+        <Col md={2} className={currentSelect === 'commander' ? 'border border-dark text-center' : 'text-center'} onClick={() => handleClick()}>
             <h5>CommandeZone</h5>
             {
                 commander.map((card, index) => (
-                    <div key={index}>
-                        <img src={card.image_uris.normal} alt='' width={'100%'} onClick={() => setRemoveCard({card, from: "commander"})}/>
-                    </div>
+                    <Card 
+                      key={`${index}-${card.id}`}
+                      card={card}
+                      />
                 ))
             }
         </Col>
