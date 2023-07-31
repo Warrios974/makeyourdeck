@@ -1,46 +1,57 @@
 import { getCards } from "../api/MagicApi"
 
+// export const theFilter = {
+//     name: null,
+//     oracle: null,
+//     set: null,
+//     formats: {
+//         standard : false,
+//         modern : false,
+//         commander : false,
+//     },
+//     order: {
+//         cmc: false,
+//         name: false,
+//         rarity: false,
+//         color: false
+//     },
+//     colors: {
+//         white : false,
+//         blue : false,
+//         black : false,
+//         red : false,
+//         green : false,
+//         colorless : false,
+//         multicolor : false,
+//     },
+//     rarities: {
+//         common : false,
+//         uncommon : false,
+//         rare : false,
+//         mythic : false,
+//     },
+//     types: {
+//         planeswalker : false,
+//         creature : false,
+//         instant : false,
+//         sorcery : false,
+//         enchantment : false,
+//         artifact : false,
+//         land : false,
+//         battle : false,
+//         legendary : false
+//     }
+// }
+
 export const theFilter = {
     name: null,
     oracle: null,
-    set: null,
-    formats: {
-        standard : false,
-        modern : false,
-        commander : false,
-    },
-    order: {
-        cmc: false,
-        name: false,
-        rarity: false,
-        color: false
-    },
-    colors: {
-        white : false,
-        blue : false,
-        black : false,
-        red : false,
-        green : false,
-        colorless : false,
-        multicolor : false,
-    },
-    rarities: {
-        common : false,
-        uncommon : false,
-        rare : false,
-        mythic : false,
-    },
-    types: {
-        planeswalker : false,
-        creature : false,
-        instant : false,
-        sorcery : false,
-        enchantment : false,
-        artifact : false,
-        land : false,
-        battle : false,
-        legendary : false
-    }
+    set: [],
+    formats: [],
+    order: [],
+    colors: [],
+    rarities: [],
+    types: []
 }
 
 export async function search(filter){
@@ -73,7 +84,7 @@ export async function search(filter){
 
     const oracle = createURIOracle(filter.oracle)
 
-    const notLand = filter.types.land === false ? '+' + encodeURIComponent('-t:land') : ''
+    const notLand = filter.types.includes('land') === false ? '+' + encodeURIComponent('-t:land') : ''
 
     const colorsURI = createURIColors()
 
@@ -96,13 +107,15 @@ export async function search(filter){
         
         let list = []
 
-        for (let index = 0; index < table.length; index++) {
+        for (let index = 0; index < filter.length; index++) {
 
-            const element = table[index]
+            const element = filter[index]
 
             //const regex = new RegExp("/" + tabColor[1] + "/g")
 
-            if(filter[element[0]] === true) list.push(encodeURIComponent(element[1]))
+            table.forEach(color => {
+                if (color[0] === element) list.push(encodeURIComponent(color[1]))
+            });
 
             //if(colorsFilter[tabColor[0]] === false) colorsURI.replace(regex, '')
         }
@@ -128,13 +141,18 @@ export async function search(filter){
 
         let list = []
 
-        console.log('====');
-        console.log('filter',filter);
-        console.log('====');
-        
-        table.forEach(element => {
-            if(filter[element[0]] === true) list.push(encodeURIComponent(element[1]))
-        });
+        for (let index = 0; index < filter.length; index++) {
+
+            const element = filter[index]
+
+            //const regex = new RegExp("/" + tabColor[1] + "/g")
+
+            table.forEach(type => {
+                if (type[0] === element) list.push(encodeURIComponent(type[1]))
+            });
+
+            //if(colorsFilter[tabColor[0]] === false) colorsURI.replace(regex, '')
+        }
         
         list.forEach((element) => {
             URI = URI + '+' + element
@@ -260,10 +278,8 @@ export async function search(filter){
 
     function isVoid(){
 
-        const OriginFilters = { ...theFilter, colors:{...theFilter.colors}, rarities:{...theFilter.rarities} }
-
         const JSONFilters = JSON.stringify(filter)
-        const JSONOriginFilters = JSON.stringify(OriginFilters)
+        const JSONOriginFilters = JSON.stringify(theFilter)
 
         if (JSONFilters === JSONOriginFilters) return true
 

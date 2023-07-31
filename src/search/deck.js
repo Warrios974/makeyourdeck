@@ -1,5 +1,5 @@
 import { getCards } from "../api/MagicApi"
-import { isCommanderDeck } from "../utils/functions/mainFunction"
+import { checkCommanderType, isCommanderCard, isCommanderDeck } from "../utils/functions/mainFunction"
 
 export const theDeck = {
     name: null,
@@ -57,41 +57,13 @@ export const formatRoleDeck = {
     }
 }
 
-export async function deckBuild(deck) {
+export function deckBuild(deck) {
 
     const decktype = deck.type
 
     let localDeck = JSON.parse(JSON.stringify(deck))
 
-    function initDeck(name, format){
-
-        const nameDeck = name
-        const formatDeck = format
-
-        localDeck.name = nameDeck
-        
-        const roles = JSON.parse(JSON.stringify(formatRoleDeck[formatDeck]))
-
-        let localCards = {
-            commander : null,
-            signature : null,
-            mainDeck : null,
-            reserve : null,
-            numberExemple : null
-        }
-
-        if (roles.totalDeckCard) localCards.mainDeck = {cards: [], total : roles.totalDeckCard}
-        if (roles.reserveDeckCard) localCards.reserve = {cards: [], total : roles.reserveDeckCard}
-        if (roles.commander) localCards.commander = {type: null, cards: []}
-        if (roles.signature) localCards.signature = []
-        if (roles.numberCopy) localCards.numberExemple = roles.numberCopy
-
-        localDeck.cards = localCards
-        
-        return localDeck
-    }
-
-    async function addCard(card, typeSelect) {
+    function addCard(card, typeSelect) {
 
         const currentCard = JSON.parse(JSON.stringify(card))
 
@@ -101,13 +73,26 @@ export async function deckBuild(deck) {
             
             let commanderType = localDeck.cards.commander.type
             
+            let mainDeck = localDeck.cards.mainDeck.cards
+            const cardInMainDeck = mainDeck.find(element => element.id === currentCard['id'])
+
+            if (cardInMainDeck) {
+                
+                return localDeck
+            }
+            
             //si un deck commander car i peut etre un autre deck
             if (decktype === 'commander' || decktype === 'brawl') {
 
                 const typeCommander = checkCommanderType(currentCard)
                 const commanderCardName = currentCard.name
+                
+                if (!isCommanderCard(currentCard, decktype)) {
+                
+                    return localDeck
+                }
 
-                if (isCommanderCard(currentCard) && commanderCard.length === 0 && commanderType === null) {
+                if (isCommanderCard(currentCard, decktype) && commanderCard.length === 0 && commanderType === null) {
 
                     // if (typeCommander === "Partner with") {
                     //     const getHerPartner = currentCard.all_parts.find((card) => (card.name !== commanderCardName && card.component === 'combo_piece') )
@@ -162,9 +147,18 @@ export async function deckBuild(deck) {
         if (typeSelect === 'mainDeck' && currentCard) {
 
             let mainDeck = localDeck.cards.mainDeck.cards
+            
             const cardInMainDeck = mainDeck.find(element => element.id === currentCard['id'])
 
             if (isCommanderDeck(decktype)) {
+
+                let commanderCard = localDeck.cards.commander.cards
+                const cardInCommandeZone = commanderCard.find(element => element.id === currentCard['id'])
+                
+                if (cardInCommandeZone) {
+                
+                    return localDeck
+                }
 
                 if (!cardInMainDeck) {
                     currentCard['quantity'] = 1
@@ -271,48 +265,40 @@ export async function deckBuild(deck) {
         return localDeck
     }
 
-
-    function isCommanderCard(card) {
-
-        const type = card.type_line
-
-        const isLegendary = (type && type.includes('Legendary Creature')) ? true : false
-
-        const isLegal = (isLegendary && card.legalities[decktype]) === 'legal' ? true : false
-
-        if (isLegendary && isLegal) {
-            return true
-        }
-
-        return false
-    }
-
-
-    function checkCommanderType(card) {
-
-        const isPartner = card.keywords.find((keyword) => keyword === "Partner") 
-        const isPartnerWith = card.keywords.find((keyword) => keyword === "Partner with")
-        const isFriendForever = card.keywords.find((keyword) => keyword === "Friends forever")
-        
-
-        if (isPartnerWith) {
-            return "Partner with"
-        }
-        
-        if (isPartner) {
-            return "Partner"
-        }
-        
-        if (isFriendForever) {
-            return "Friends forever"
-        }
-
-        return "normal"
-    }
-
     return {
         initDeck,
         addCard,
         removeCard
     }
+}
+
+export function initDeck(name, format, deck){
+
+    let localDeck = JSON.parse(JSON.stringify(deck))
+
+    const nameDeck = name
+
+    const formatDeck = format
+
+    localDeck.name = nameDeck
+    
+    const roles = JSON.parse(JSON.stringify(formatRoleDeck[formatDeck]))
+
+    let localCards = {
+        commander : null,
+        signature : null,
+        mainDeck : null,
+        reserve : null,
+        numberExemple : null
+    }
+
+    if (roles.totalDeckCard) localCards.mainDeck = {cards: [], total : roles.totalDeckCard}
+    if (roles.reserveDeckCard) localCards.reserve = {cards: [], total : roles.reserveDeckCard}
+    if (roles.commander) localCards.commander = {type: null, cards: []}
+    if (roles.signature) localCards.signature = []
+    if (roles.numberCopy) localCards.numberExemple = roles.numberCopy
+
+    localDeck.cards = localCards
+    
+    return localDeck
 }
