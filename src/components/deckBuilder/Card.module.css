@@ -2,43 +2,70 @@
     position: relative;
     max-width: 240px;
     width: 240px;
-    max-height: 20rem;
-    height: 20rem;
+    max-height: 23rem;
+    height: 23rem;
 }
 
 .cardContainer:hover > .addOrRemoveLayout{
     display: flex;
 }
 
-.doubleCardsContainer{
+.singleCardContainer{
     position: relative;
     width: 100%;
     height: 100%;
 }
 
+.singleCardContainer > .cardQuantity{
+    position: absolute;
+    top: 2rem;
+    left: .8rem;
+    padding: .5rem;
+    background-color: rgba(0,0,0,.5);
+
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 0 10px rgba(0,0,0,1);
+}
+
+.singleCardContainer > img{
+    max-width: 215px;
+    width: 215px;
+}
+
+.doubleCardsContainer{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
 .doubleCardsContainer > img{
     position: absolute;
-    width: 90%;
+    width: 100%;
+    max-width: 215px;
+    width: 215px;
 }
 
 .doubleCardsContainer > img:first-of-type{
-    z-index: 1002;
-    bottom: 23px;
-    left: 0;
+    z-index: 2;
+    max-width: 215px;
+    width: 215px;
 }
 
 .doubleCardsContainer > img:last-of-type {
-    z-index: 1001;
-    top: 0;
-    right: 0;
+    z-index: 1;
+    max-width: 215px;
+    width: 215px;
 }
 
-.doubleCardsContainer > img:last-of-type:hover {
-    z-index: 1003;
+.doubleCardsContainer:hover > img:last-of-type{
+    z-index: 3;
 }
 
 .addOrRemoveLayout{
-    z-index: 1004;
+    z-index: 4;
     display: none;
     position: absolute;
     max-width: 215px;

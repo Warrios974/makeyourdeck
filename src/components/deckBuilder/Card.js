@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
-import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
 import { Col } from 'react-bootstrap'
+import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
 import style from './Card.module.css'
 
 function Card(props) {
@@ -45,7 +45,8 @@ function Card(props) {
 
     if (conditionSingleFaces) {
       return (
-        <Col>
+        <Col
+        className={style.singleCardContainer}>
             <img 
               className='img-fluid img-thumbnail'
               src={card.image_uris['normal']} 
@@ -54,6 +55,7 @@ function Card(props) {
               loading='lazy'
               onDragStart={(e) => handleDrapStart(e, card)}
               />
+              {card.quantity && <span className={style.cardQuantity}>x{card.quantity}</span>}
         </Col>
       )
     }
@@ -73,7 +75,6 @@ function Card(props) {
       <FatoryCard 
         layout={card.layout}/>
       <div>
-        {card.quantity && <span>x{card.quantity}</span>}
       </div>
     </article>
   )
