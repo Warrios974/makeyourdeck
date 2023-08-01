@@ -18,11 +18,19 @@ export const isCommanderCard = (card, decktype) => {
 
     const type = card.type_line
 
-    const isLegendary = (type && type.includes('Legendary Creature')) ? true : false
+    let isGoodCard
 
-    const isLegal = (isLegendary && card.legalities[decktype]) === 'legal' ? true : false
+    if (decktype !== 'oathbreaker') {
+        isGoodCard = (type && type.includes('Legendary Creature')) ? true : false
+    }
 
-    if (isLegendary && isLegal) {
+    if (decktype === 'oathbreaker') {
+        isGoodCard = (type && (type.includes('Planeswalker') || type.includes('Instant') || type.includes('Sorcery'))) ? true : false
+    }
+
+    const isLegal = (isGoodCard && card.legalities[decktype]) === 'legal' ? true : false
+
+    if (isGoodCard && isLegal) {
         return true
     }
 
@@ -31,19 +39,19 @@ export const isCommanderCard = (card, decktype) => {
 
 export const checkCommanderType = (card) => {
 
-    const isPartner = card.keywords.find((keyword) => keyword === "Partner") 
+    const isPartner = card.keywords.find((keyword) => keyword === "Partner")
     const isPartnerWith = card.keywords.find((keyword) => keyword === "Partner with")
     const isFriendForever = card.keywords.find((keyword) => keyword === "Friends forever")
-    
+
 
     if (isPartnerWith) {
         return "Partner with"
     }
-    
+
     if (isPartner) {
         return "Partner"
     }
-    
+
     if (isFriendForever) {
         return "Friends forever"
     }
@@ -53,26 +61,26 @@ export const checkCommanderType = (card) => {
 
 export const sortByColors = (cards) => {
 
-    const colors = {"W": 0, "U": 1, "B": 2, "R": 3, "G": 4, "M" : 5, "L" : 6}
+    const colors = { "W": 0, "U": 1, "B": 2, "R": 3, "G": 4, "M": 5, "L": 6 }
 
     const color = (card) => {
         if (card.colors) {
             if (card.colors.length > 1) {
                 return "M"
-            }else{
+            } else {
                 if (card.colors[0]) {
                     return card.colors[0]
-                }else{
+                } else {
                     return "L"
                 }
             }
-        }else{
+        } else {
             if (card.card_faces[0].colors.length > 1) {
                 return "M"
-            }else{
+            } else {
                 if (card.card_faces[0].colors[0]) {
                     return card.card_faces[0].colors[0]
-                }else{
+                } else {
                     return "L"
                 }
             }
@@ -94,8 +102,8 @@ export const sortByColors = (cards) => {
 
 export const sortByCost = (cards) => {
 
-    const costLand = cards.filter(card => card.cmc === 0 && card.type_line === 'land')
-    const costZero = cards.filter(card => card.cmc === 0 && card.type_line !== 'land')
+    const costLand = cards.filter(card => card.type_line === 'Land' && card.cmc === 0)
+    const costZero = cards.filter(card => card.cmc === 0 && card.type_line !== 'Land')
     const costOne = cards.filter(card => card.cmc === 1)
     const costTwo = cards.filter(card => card.cmc === 2)
     const costThree = cards.filter(card => card.cmc === 3)
@@ -104,13 +112,37 @@ export const sortByCost = (cards) => {
     const costSixPlus = cards.filter(card => card.cmc > 5)
 
     return [
-        costZero,
-        costOne,
-        costTwo,
-        costThree,
-        costfour,
-        costFive,
-        costSixPlus,
-        costLand
+        {
+            columnName: "0",
+            cards: costZero
+        },
+        {
+            columnName: "1",
+            cards: costOne
+        },
+        {
+            columnName: "2",
+            cards: costTwo
+        },
+        {
+            columnName: "3",
+            cards: costThree
+        },
+        {
+            columnName: "4",
+            cards: costfour
+        },
+        {
+            columnName: "5",
+            cards: costFive
+        },
+        {
+            columnName: "6",
+            cards: costSixPlus
+        },
+        {
+            columnName: "Land",
+            cards: costLand
+        }
     ]
 }
