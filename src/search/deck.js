@@ -12,51 +12,6 @@ export const theDeck = {
     isInit : false
 }
 
-export const formatRoleDeck = {
-    standard: {
-        totalDeckCard : 60,
-        reserveDeckCard: 15,
-        commander: false,
-        signature: false,
-        numberCopy: 4
-    },
-    modern : {
-        totalDeckCard : 60,
-        reserveDeckCard: 15,
-        commander: false,
-        signature: false,
-        numberCopy: 4
-    },
-    vintage : {
-        totalDeckCard : 60,
-        reserveDeckCard: 15,
-        commander: false,
-        signature: false,
-        numberCopy: 4
-    },
-    brawl : {
-        totalDeckCard : 60,
-        reserveDeckCard: 0,
-        commander: true,
-        signature: false,
-        numberCopy: 1
-    },
-    commander : {
-        totalDeckCard : 100,
-        reserveDeckCard: 0,
-        commander: true,
-        signature: false,
-        numberCopy: 1
-    },
-    duel : {
-        totalDeckCard : 100,
-        reserveDeckCard: 0,
-        commander: true,
-        signature: false,
-        numberCopy: 1
-    }
-}
-
 export function deckBuild(deck) {
 
     const decktype = deck.type
@@ -141,6 +96,71 @@ export function deckBuild(deck) {
 
                 commanderCard.push(currentCard)
                 return localDeck
+            }
+
+            if (decktype === 'oathbreaker') {
+
+                const typeCommander = checkCommanderType(currentCard)
+                const commanderCardId = currentCard.id
+
+                const isGoodCommanderCard = isCommanderCard(currentCard, decktype)
+                
+                if (!isGoodCommanderCard) {
+                
+                    return localDeck
+                }
+                
+                if (isGoodCommanderCard) {
+                    const isInCommanderZone = commanderCard.find((card) => card.id === commanderCardId)
+                    if (isInCommanderZone) return localDeck
+                    
+                    const isInCommanderDeck = mainDeck.find((card) => card.id === commanderCardId)
+                    if (isInCommanderDeck) return localDeck
+
+                    const typeCard = currentCard.type_line.includes('Planeswalker') ? 'Planeswalker' : 
+                        currentCard.type_line.includes('Socery') ? 'Socery' : 
+                        currentCard.type_line.includes('Instant') ? 'Instant' : currentCard.type_line
+                        
+                    const alreadyHaveTypeCard = commanderCard.find((card) => card.type_line.includes(typeCard)) ? true : false
+                    
+                    if (commanderCard.length < 2 && alreadyHaveTypeCard) {
+                        return localDeck
+                    }
+
+                    const typeCardsInCommandeZone = []
+
+                    commanderCard.forEach((card) => {
+                        const typeCard = currentCard.type_line.includes('Planeswalker') ? 'Planeswalker' : 
+                            currentCard.type_line.includes('Socery') ? 'Socery' : 
+                            currentCard.type_line.includes('Instant') ? 'Instant' : currentCard.type_line
+
+                        typeCardsInCommandeZone.push(typeCard)
+                    })
+
+                    if (commanderCard.length < 2 && !alreadyHaveTypeCard) {
+                        if (commanderCard.length === 0) {
+                            if(typeCard === 'Planeswalker') localDeck.cards.commander.type = typeCommander
+                            commanderCard.push(currentCard)
+                            return localDeck
+                        }
+                        if (commanderCard.length > 0) {
+                            if (typeCardsInCommandeZone.includes("Planeswalker")) {
+                                commanderCard.push(currentCard)
+                                return localDeck
+                            }
+                            
+                            if (typeCardsInCommandeZone.includes("Instant") || typeCardsInCommandeZone.includes("Socery")) {
+                                localDeck.cards.commander.type = typeCommander
+                                commanderCard.push(currentCard)
+                                return localDeck
+                            }
+
+                            return localDeck
+                        }
+                    }
+
+                    if (commanderCard.length > 1) return localDeck
+                }
             }
         }
         
@@ -229,11 +249,12 @@ export function deckBuild(deck) {
 
     function removeCard(card, typeSelect) {
         
-        let mainDeck = localDeck.cards.mainDeck.cards
 
         let cardId = card.id
 
         if (card && typeSelect === "mainDeck") {
+
+            let mainDeck = localDeck.cards.mainDeck.cards
     
             const cardInMainDeck = mainDeck.find(element => element.id === cardId)
     
@@ -262,6 +283,22 @@ export function deckBuild(deck) {
             }
         }
 
+        if (card && typeSelect === "reserve") {
+
+            let reserve = localDeck.cards.reserve.cards
+    
+            const cardInReserveDeck = reserve.find(element => element.id === cardId)
+    
+            if (cardInReserveDeck) {
+                if ((cardInReserveDeck.quantity < 4 || cardInReserveDeck.quantity === 4) && cardInReserveDeck.quantity > 0) cardInReserveDeck.quantity -= 1
+                if (cardInReserveDeck.quantity === 0) reserve = reserve.filter((element) => element.id !== card.id)
+            }
+
+            localDeck.cards.reserve.cards = reserve
+
+            return localDeck
+        }
+
         return localDeck
     }
 
@@ -274,6 +311,52 @@ export function deckBuild(deck) {
 
 export function initDeck(name, format, deck){
 
+
+    const formatRoleDeck = {
+        standard: {
+            totalDeckCard : 60,
+            reserveDeckCard: 15,
+            commander: false,
+            numberCopy: 4
+        },
+        modern : {
+            totalDeckCard : 60,
+            reserveDeckCard: 15,
+            commander: false,
+            numberCopy: 4
+        },
+        vintage : {
+            totalDeckCard : 60,
+            reserveDeckCard: 15,
+            commander: false,
+            numberCopy: 4
+        },
+        brawl : {
+            totalDeckCard : 60,
+            reserveDeckCard: 0,
+            commander: true,
+            numberCopy: 1
+        },
+        commander : {
+            totalDeckCard : 100,
+            reserveDeckCard: 0,
+            commander: true,
+            numberCopy: 1
+        },
+        duel : {
+            totalDeckCard : 100,
+            reserveDeckCard: 0,
+            commander: true,
+            numberCopy: 1
+        },
+        oathbreaker : {
+            totalDeckCard : 60,
+            reserveDeckCard: 0,
+            commander: true,
+            numberCopy: 1
+        }
+    }
+    
     let localDeck = JSON.parse(JSON.stringify(deck))
 
     const nameDeck = name
@@ -295,7 +378,6 @@ export function initDeck(name, format, deck){
     if (roles.totalDeckCard) localCards.mainDeck = {cards: [], total : roles.totalDeckCard}
     if (roles.reserveDeckCard) localCards.reserve = {cards: [], total : roles.reserveDeckCard}
     if (roles.commander) localCards.commander = {type: null, cards: []}
-    if (roles.signature) localCards.signature = []
     if (roles.numberCopy) localCards.numberExemple = roles.numberCopy
 
     localDeck.cards = localCards

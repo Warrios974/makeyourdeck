@@ -1,18 +1,18 @@
-import React, { useContext } from 'react'
 import { library } from '@fortawesome/fontawesome-svg-core'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
+import { yupResolver } from '@hookform/resolvers/yup'
+import React, { useContext } from 'react'
 import { Button, Form, Modal } from 'react-bootstrap'
-import { DeckBuilderContext } from '../../../contexts/deckBuilderContext'
 import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import * as yup from "yup";
+import * as yup from "yup"
+import { DeckBuilderContext } from '../../../contexts/deckBuilderContext'
 import { initDeck } from '../../../search/deck'
 
 library.add(faXmark)
 
 const schema = yup.object({
   name: yup.string().matches(/^[a-zA-Z0-9 ]+$/i, 'Is not in correct format').min(3).required(),
-  format: yup.string().matches(/^commander$|^vintage$|^standard$|^modern$|^brawl$|^duel$/i, 'Not conforme').required(),
+  format: yup.string().matches(/^commander$|^vintage$|^standard$|^modern$|^brawl$|^duel$|^oathbreaker$/i, 'Not conforme').required(),
   isPublic: yup.boolean(),
 }).required();
 
@@ -31,7 +31,7 @@ function SelectYourDeckType() {
   const [currentSelect, setCurrentSelect] = stateCurrentSelect
   const [currentDeck, setCurrentDeck] = stateDeck
 
-  const formatsList = ['standard','commander', 'modern', 'vintage', 'brawl','duel']
+  const formatsList = ['standard','commander', 'modern', 'vintage', 'brawl','duel', 'oathbreaker']
 
   const onSubmit = async (data) => {
 
@@ -40,7 +40,7 @@ function SelectYourDeckType() {
     const isPublic = data.isPublic
 
     let localFilters = JSON.parse(JSON.stringify(filters))
-    localFilters.formats = [format]
+    localFilters.formats.push(format)
 
     let localDeck = JSON.parse(JSON.stringify(currentDeck))
     localDeck.name = name
@@ -55,8 +55,6 @@ function SelectYourDeckType() {
       if (isCommanderDeck) {
         localDeck.isInit = false
         setCurrentSelect('commander')
-        localFilters.types.push('legendary')
-        localFilters.types.push('creature')
       }
       if (!isCommanderDeck) localDeck.isInit = true
 

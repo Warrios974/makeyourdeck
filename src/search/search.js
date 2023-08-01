@@ -255,7 +255,8 @@ export async function search(filter){
             ['vintage', 'f:vintage'],
             ['commander', 'f:commander'],
             ['brawl', 'f:brawl'],
-            ['duel', 'f:duel']
+            ['duel', 'f:duel'],
+            ['oathbreaker', 'f:oathbreaker']
         ]
         
         const orderURI = orConditionSearch(formats,formatsFilter)
