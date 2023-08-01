@@ -111,8 +111,8 @@ export const sortByColors = (cards) => {
 
 export const sortByCost = (cards) => {
 
-    const costLand = cards.filter(card => card.type_line === 'Land' && card.cmc === 0)
-    const costZero = cards.filter(card => card.cmc === 0 && card.type_line !== 'Land')
+    const costLand = cards.filter(card => card.type_line.includes('Land') && card.cmc === 0)
+    const costZero = cards.filter(card => card.cmc === 0 && !card.type_line.includes('Land'))
     const costOne = cards.filter(card => card.cmc === 1)
     const costTwo = cards.filter(card => card.cmc === 2)
     const costThree = cards.filter(card => card.cmc === 3)
