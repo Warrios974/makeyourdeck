@@ -19,7 +19,7 @@ function ReserveZone() {
   }
 
   if(reserveDeck) return (
-    <Col md={4} className={currentSelect === 'reserve' ? 'border border-dark text-center' : 'text-center'} onClick={() => handleClick()}>
+    <Col md={12} className={currentSelect === 'reserve' ? 'border border-dark text-center' : 'text-center'} onClick={() => handleClick()}>
         <h5>ReserveZone</h5>
           <div>
             {
