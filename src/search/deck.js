@@ -6,6 +6,7 @@ export const theDeck = {
     author : null,
     public : null,
     type: null,
+    image: null,
     cards : {
         mainDeck : []
     },

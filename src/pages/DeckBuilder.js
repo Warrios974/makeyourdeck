@@ -1,11 +1,12 @@
 import React, { useContext, useEffect } from 'react'
+import { Row } from 'react-bootstrap'
+import BannerDeck from '../components/deckBuilder/BannerDeck'
 import Carrousel from '../components/deckBuilder/Carrousel'
+import DeckSection from '../components/deckBuilder/DeckSection'
+import Sidebar from '../components/deckBuilder/Sidebar'
+import SelectYourDeckType from '../components/forms/SelectYourDeckType/SelectYourDeckType'
 import SearchAndFilterDeckForm from '../components/forms/searchAndFilterForm/SearchAndFilterDeckForm'
 import { DeckBuilderContext } from '../contexts/deckBuilderContext'
-import SelectYourDeckType from '../components/forms/SelectYourDeckType/SelectYourDeckType'
-import Sidebar from '../components/deckBuilder/Sidebar'
-import { Row } from 'react-bootstrap'
-import DeckSection from '../components/deckBuilder/DeckSection'
 
 function DeckBuilder() {
     
@@ -26,6 +27,7 @@ function DeckBuilder() {
 
     return (
         <>
+            <BannerDeck />
             <SearchAndFilterDeckForm />
             <Row>
                 <Carrousel />
