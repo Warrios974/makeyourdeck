@@ -1,5 +1,5 @@
 import { getCards } from "../api/MagicApi"
-import { checkCommanderType, isCommanderCard, isCommanderDeck } from "../utils/functions/mainFunction"
+import { checkCommanderType, isCommanderCard, isCommanderDeck, isLegalCard } from "../utils/functions/mainFunction"
 
 export const theDeck = {
     name: null,
@@ -22,7 +22,7 @@ export function deckBuild(deck) {
 
         const currentCard = JSON.parse(JSON.stringify(card))
 
-        if (typeSelect === 'commander' && currentCard) {
+        if (typeSelect === 'commander' && currentCard && isLegalCard(card, decktype)) {
             
             let commanderCard = localDeck.cards.commander.cards
             
@@ -164,7 +164,7 @@ export function deckBuild(deck) {
             }
         }
         
-        if (typeSelect === 'mainDeck' && currentCard) {
+        if (typeSelect === 'mainDeck' && currentCard && isLegalCard(card, decktype)) {
 
             let mainDeck = localDeck.cards.mainDeck.cards
             
@@ -214,7 +214,7 @@ export function deckBuild(deck) {
             }
         }
         
-        if (typeSelect === 'reserve' && currentCard) {
+        if (typeSelect === 'reserve' && currentCard && isLegalCard(card, decktype)) {
 
             let mainDeck = localDeck.cards.mainDeck.cards !== null && localDeck.cards.mainDeck.cards
             let reserveDeck = localDeck.cards.reserve.cards

@@ -14,6 +14,15 @@ export const isCommanderDeck = (type) => {
     return isCommadnerDeck
 }
 
+export const isLegalCard = (card, decktype) => {
+
+    const typeCardLegalities = card.legalities
+
+    const isLegalCard = typeCardLegalities[decktype] === 'legal' ? true : false
+
+    return isLegalCard
+}
+
 export const isCommanderCard = (card, decktype) => {
 
     const type = card.type_line
