@@ -1,0 +1,21 @@
+.bannerContainer{
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+.bannerContainer > .btnModifedDeck{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.bannerInfoContainer{
+    text-align: right;
+}
+
+.bannerInfoContainer > span{
+    padding-left: 1rem;
+}
