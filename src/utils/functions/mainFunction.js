@@ -68,6 +68,20 @@ export const checkCommanderType = (card) => {
     return "normal"
 }
 
+export const typeCard = (card) => {
+
+    if (card.type_line.includes('Planeswalker')) return 'Planeswalker'
+    if (card.type_line.includes('Creature')) return 'Creature'
+    if (card.type_line.includes('Enchantment')) return 'Enchantment'
+    if (card.type_line.includes('Artefact')) return 'Artefact'
+    if (card.type_line.includes('Battle')) return 'Battle'
+    if (card.type_line.includes('Instant')) return 'Instant'
+    if (card.type_line.includes('Sorcery')) return 'Sorcery'
+    if (card.type_line.includes('Land')) return 'Land'
+
+    return null
+}
+
 export const sortByColors = (cards) => {
 
     const colors = { "W": 0, "U": 1, "B": 2, "R": 3, "G": 4, "M": 5, "L": 6 }
@@ -111,8 +125,8 @@ export const sortByColors = (cards) => {
 
 export const sortByCost = (cards) => {
 
-    const costLand = cards.filter(card => card.type_line.includes('Land') && card.cmc === 0)
-    const costZero = cards.filter(card => card.cmc === 0 && !card.type_line.includes('Land'))
+    const costLand = cards.filter(card => typeCard(card) === "Land" && card.cmc === 0)
+    const costZero = cards.filter(card => card.cmc === 0 && typeCard(card) !== 'Land')
     const costOne = cards.filter(card => card.cmc === 1)
     const costTwo = cards.filter(card => card.cmc === 2)
     const costThree = cards.filter(card => card.cmc === 3)
@@ -121,37 +135,35 @@ export const sortByCost = (cards) => {
     const costSixPlus = cards.filter(card => card.cmc > 5)
 
     return [
-        {
-            columnName: "0",
-            cards: costZero
-        },
-        {
-            columnName: "1",
-            cards: costOne
-        },
-        {
-            columnName: "2",
-            cards: costTwo
-        },
-        {
-            columnName: "3",
-            cards: costThree
-        },
-        {
-            columnName: "4",
-            cards: costfour
-        },
-        {
-            columnName: "5",
-            cards: costFive
-        },
-        {
-            columnName: "6",
-            cards: costSixPlus
-        },
-        {
-            columnName: "Land",
-            cards: costLand
-        }
+        {columnName: "0", cards: costZero},
+        {columnName: "1",cards: costOne},
+        {columnName: "2",cards: costTwo},
+        {columnName: "3",cards: costThree},
+        {columnName: "4",cards: costfour},
+        {columnName: "5",cards: costFive},
+        {columnName: "6",cards: costSixPlus},
+        {columnName: "Land",cards: costLand}
     ]
+}
+
+export const sortByType = (cards) => {
+
+    const typeCardOrder = {
+        Planeswalker: 0,
+        Creature: 1,
+        Enchantment: 2,
+        Artefact: 3,
+        Battle: 4,
+        Instant: 5,
+        Sorcery: 6,
+        Land: 7,
+    }
+
+    const sort = (a, b) => {
+        return typeCardOrder[typeCard(a)] - typeCardOrder[typeCard(b)]
+    }
+
+    const sortData = cards.sort(sort)
+
+    return sortData
 }

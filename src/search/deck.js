@@ -1,5 +1,5 @@
 import { getCards } from "../api/MagicApi"
-import { checkCommanderType, isCommanderCard, isCommanderDeck, isLegalCard } from "../utils/functions/mainFunction"
+import { checkCommanderType, isCommanderCard, isCommanderDeck, isLegalCard, typeCard } from "../utils/functions/mainFunction"
 
 export const theDeck = {
     name: null,
@@ -48,55 +48,60 @@ export function deckBuild(deck) {
                     return localDeck
                 }
 
-                if (isCommanderCard(currentCard, decktype) && commanderCard.length === 0 && commanderType === null) {
+                if (isCommanderCard(currentCard, decktype)){
+                    
+                    if(commanderCard.length === 0 && commanderType === null) {
 
-                    // if (typeCommander === "Partner with") {
-                    //     const getHerPartner = currentCard.all_parts.find((card) => (card.name !== commanderCardName && card.component === 'combo_piece') )
-                    //     //const herPartnerUri = getHerPartner.uri
-                    //     //const herPatner = await getCards(herPartnerUri)
-                    //     commanderCard.push(currentCard)
-                    //     //commanderCard.push(herPatner)
-                    //     localDeck.cards.commander.type = typeCommander
-                    //     return localDeck
-                    // }
-
-                    localDeck.cards.commander.type = typeCommander
-                    commanderCard.push(currentCard)
-                    return localDeck
-                }
-
-                if (commanderType === "Partner with" && commanderCard.length < 2) {
-                    const getHerPartner = commanderCard[0].all_parts.find((card) => (card.name !== commanderCard[0].name && card.component === 'combo_piece') )
-                    const namePartner = getHerPartner.name
-                    if (commanderCardName !== namePartner) {
-                        return localDeck
-                    }
-                    if (commanderCardName === namePartner) {
+                        localDeck.cards.commander.type = typeCommander
                         commanderCard.push(currentCard)
                         return localDeck
                     }
-                }
 
-                if (typeCommander === "Partner with" && commanderCard[0]) {
+                    const currentCommanderCard = commanderCard[0] ? commanderCard[0].name : ''
+
+                    if (commanderCardName === currentCommanderCard) {
+                        return localDeck
+                    }
+                    const commanderCardInDeckName = (commanderCard[0] && commanderCard[0].name) ? commanderCard[0].name : ''
+
+                    if (commanderCardName === commanderCardInDeckName) {
+                        return localDeck
+                    }
+
+                    if (commanderType === "Friends forever" && commanderCard.length < 2) {
+                        if (currentCard.keywords.includes('Friends forever')) {
+                            commanderCard.push(currentCard)
+                            return localDeck
+                        }
+
+                        return localDeck
+                        
+                    }
+
+                    if (commanderType === "Partner with" && commanderCard.length < 2) {
+                        const getHerPartner = commanderCard[0].all_parts.find((card) => (card.name !== commanderCard[0].name && card.component === 'combo_piece') )
+                        const namePartner = getHerPartner.name
+                        if (commanderCardName !== namePartner) {
+                            return localDeck
+                        }
+                        if (commanderCardName === namePartner) {
+                            commanderCard.push(currentCard)
+                            return localDeck
+                        }
+                    }
+
+                    if (commanderType === 'normal') {
+                        return localDeck
+                    }
+
+                    if (commanderCard.length === 2) {
+                        return localDeck
+                    }
+
+                    commanderCard.push(currentCard)
                     return localDeck
                 }
-
-                const commanderCardInDeckName = (commanderCard[0] && commanderCard[0].name) ? commanderCard[0].name : ''
-
-                if (commanderCardName === commanderCardInDeckName) {
-                    return localDeck
-                }
-
-                if (commanderType === 'normal') {
-                    return localDeck
-                }
-
-                if (commanderCard.length === 2) {
-                    return localDeck
-                }
-
-                commanderCard.push(currentCard)
-                return localDeck
+                
             }
 
             if (decktype === 'oathbreaker') {
@@ -118,11 +123,9 @@ export function deckBuild(deck) {
                     const isInCommanderDeck = mainDeck.find((card) => card.id === commanderCardId)
                     if (isInCommanderDeck) return localDeck
 
-                    const typeCard = currentCard.type_line.includes('Planeswalker') ? 'Planeswalker' : 
-                        currentCard.type_line.includes('Socery') ? 'Socery' : 
-                        currentCard.type_line.includes('Instant') ? 'Instant' : currentCard.type_line
+                    const typeOfCard = typeCard(currentCard)
                         
-                    const alreadyHaveTypeCard = commanderCard.find((card) => card.type_line.includes(typeCard)) ? true : false
+                    const alreadyHaveTypeCard = commanderCard.find((card) => card.type_line.includes(typeOfCard)) ? true : false
                     
                     if (commanderCard.length < 2 && alreadyHaveTypeCard) {
                         return localDeck
@@ -131,11 +134,8 @@ export function deckBuild(deck) {
                     const typeCardsInCommandeZone = []
 
                     commanderCard.forEach((card) => {
-                        const typeCard = currentCard.type_line.includes('Planeswalker') ? 'Planeswalker' : 
-                            currentCard.type_line.includes('Socery') ? 'Socery' : 
-                            currentCard.type_line.includes('Instant') ? 'Instant' : currentCard.type_line
-
-                        typeCardsInCommandeZone.push(typeCard)
+                        const typeOfCard = typeCard(currentCard)
+                        typeCardsInCommandeZone.push(typeOfCard)
                     })
 
                     if (commanderCard.length < 2 && !alreadyHaveTypeCard) {
@@ -150,7 +150,7 @@ export function deckBuild(deck) {
                                 return localDeck
                             }
                             
-                            if (typeCardsInCommandeZone.includes("Instant") || typeCardsInCommandeZone.includes("Socery")) {
+                            if (typeCardsInCommandeZone.includes("Instant") || typeCardsInCommandeZone.includes("Sorcery")) {
                                 localDeck.cards.commander.type = typeCommander
                                 commanderCard.push(currentCard)
                                 return localDeck
