@@ -87,7 +87,7 @@ function Carrousel() {
   return (
     <Col
       sm={12}
-      className={`overflow-auto ${style.carrouselContainer}`}
+      className={`${style.carrouselContainer}`}
       ref={carrousel}
     >
       <Row

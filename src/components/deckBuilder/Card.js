@@ -1,6 +1,8 @@
-import React, { useContext } from 'react'
-import { Col } from 'react-bootstrap'
+import React, { useContext, useEffect, useState } from 'react'
+import { Col, Row } from 'react-bootstrap'
+import { getCard } from '../../api/MagicApi'
 import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
+import { isDoubleFaceCard } from '../../utils/functions/mainFunction'
 import style from './Card.module.css'
 
 function Card(props) {
@@ -12,17 +14,30 @@ function Card(props) {
   const [ currentDeck, setCurrentDeck, setAddCard, setRemoveCard ] = stateDeck
   const [ currentSelect ] = stateCurrentSelect
 
+  // const [allParts, setAllParts] = useState([])
+
+  // useEffect(() => {
+  //   const setAllPartsFunction = async () => {
+  //     let all_parts = []
+  
+  //     card.all_parts && card.all_parts.forEach( async (element) => {
+  //       const card = await getCard(element.name)
+  //       all_parts.push(card)
+  //     });
+  
+  //     setAllParts(all_parts)
+  //   }
+  //   setAllPartsFunction()
+  // })
+  
   const handleDrapStart = (e, card) => {
     const stringCard = JSON.stringify(card)
     e.dataTransfer.setData("object", stringCard);
   }
-      
+
   const FatoryCard = ({ layout }) => {
 
-    const conditionDoubleFaces = layout === 'transform' || layout === 'modal_dfc' || layout === 'double_faced_token' || layout === 'art_series ' || layout === 'reversible_card '
-    const conditionSingleFaces = layout !== 'transform' || layout !== 'modal_dfc' || layout !== 'double_faced_token' || layout !== 'art_series ' || layout !== 'reversible_card '
-
-    if (conditionDoubleFaces) {
+    if (isDoubleFaceCard(layout)){
 
       const carddoubleFaces = card.card_faces
 
@@ -43,14 +58,14 @@ function Card(props) {
       )
     }
 
-    if (conditionSingleFaces) {
+    if (!isDoubleFaceCard(layout)) {
       return (
         <Col
         className={style.singleCardContainer}>
             <img 
               className='img-fluid img-thumbnail'
               src={card.image_uris['normal']} 
-              alt={card.name} 
+              alt={card.name}
               id={card.id}
               loading='lazy'
               onDragStart={(e) => handleDrapStart(e, card)}
@@ -62,7 +77,16 @@ function Card(props) {
 
   }
 
+  const AllInfoCard = ({card}) => {
 
+    return (
+          <Row className={style.allInfoContainer}>
+            <Col className={style.cardName}>{card.name}</Col>
+            <Col className={style.cardType}>{card.type_line}</Col>
+            <Col className={style.cardCost}>{card.cost}</Col>
+          </Row>
+        )
+  }
 
   if (card === []) return <div>Loading...</div>
   
@@ -72,6 +96,7 @@ function Card(props) {
         <button onClick={() => setAddCard(card)}>Ajouter</button> 
         <button onClick={() => setRemoveCard({card, from: currentSelect})}>supprimer</button>
       </div>
+      <AllInfoCard card={card} />
       <FatoryCard 
         layout={card.layout}/>
       <div>

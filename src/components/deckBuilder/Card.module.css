@@ -6,6 +6,7 @@
     height: 23rem;
 }
 
+.cardContainer:hover > .allInfoContainer,
 .cardContainer:hover > .addOrRemoveLayout{
     display: flex;
 }
@@ -72,4 +73,18 @@
     width: 215px;
     top: 50%;
     justify-content: center;
+}
+
+.allInfoContainer{
+    display: none;
+    position: absolute;
+    color: white;
+    background-color: #00000064;
+    z-index: 1100;
+    right: -240px;
+    width: 300px;
+    height: 400px;
+
+    transition: display 2s;
+    transition-delay: 1s;
 }

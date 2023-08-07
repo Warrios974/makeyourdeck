@@ -46,6 +46,14 @@ export const isCommanderCard = (card, decktype) => {
     return false
 }
 
+export const isDoubleFaceCard = (layout) => {
+    const listOfDoubleFaceCard = ['transform', 'modal_dfc', 'double_faced_token','art_series', 'reversible_card']
+  
+    if (listOfDoubleFaceCard.includes(layout)) return true
+
+    return false
+  }
+
 export const checkCommanderType = (card) => {
 
     const isPartner = card.keywords.find((keyword) => keyword === "Partner")

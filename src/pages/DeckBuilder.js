@@ -29,9 +29,7 @@ function DeckBuilder() {
         <>
             <BannerDeck />
             <SearchAndFilterDeckForm />
-            <Row>
-                <Carrousel />
-            </Row>
+            <Carrousel />
             <DeckSection />
         </>
     )

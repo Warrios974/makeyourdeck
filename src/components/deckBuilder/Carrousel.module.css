@@ -1,5 +1,6 @@
 .carrouselContainer{
-    
+    overflow-x: scroll;
+    overflow-y: auto;
 }
 
 .ligneContainer{
