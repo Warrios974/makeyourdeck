@@ -1,41 +1,47 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Col, Row } from 'react-bootstrap'
-import { getCard } from '../../api/MagicApi'
+import { Col } from 'react-bootstrap'
 import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
 import { isDoubleFaceCard } from '../../utils/functions/mainFunction'
 import style from './Card.module.css'
+import { ModalContext } from '../../contexts/modalContext'
 
 function Card(props) {
   
   const { stateCurrentCards, stateNextPage, stateFilters, stateDeck, stateCurrentSelect } = useContext(DeckBuilderContext)
 
-  const { card } = props
+  const { stateModal, stateModalData } = useContext(ModalContext)
 
+  const [ cardInfoData, setCardInfoData ] = stateModalData
+  const [ modalState, toggleModals ] = stateModal
   const [ currentDeck, setCurrentDeck, setAddCard, setRemoveCard ] = stateDeck
   const [ currentSelect ] = stateCurrentSelect
 
-  // const [allParts, setAllParts] = useState([])
-
-  // useEffect(() => {
-  //   const setAllPartsFunction = async () => {
-  //     let all_parts = []
-  
-  //     card.all_parts && card.all_parts.forEach( async (element) => {
-  //       const card = await getCard(element.name)
-  //       all_parts.push(card)
-  //     });
-  
-  //     setAllParts(all_parts)
-  //   }
-  //   setAllPartsFunction()
-  // })
+  const { card, type, top } = props
   
   const handleDrapStart = (e, card) => {
     const stringCard = JSON.stringify(card)
     e.dataTransfer.setData("object", stringCard);
   }
 
-  const FatoryCard = ({ layout }) => {
+  const handleClick = (card) => {
+    setCardInfoData(card)
+    toggleModals('cardInfos')
+  }
+
+  const ActionsCard = () => {
+    return(
+      <div className={`${style.addOrRemoveLayout}`}>
+        <button onClick={() => setAddCard(card)}>Ajouter</button> 
+        <button onClick={() => setRemoveCard({card, from: currentSelect})}>supprimer</button>
+      </div>
+    )
+  }
+
+  console.log('====');
+  console.log('top',top);
+  console.log('====');
+
+  const ImageFactory = ({ layout }) => {
 
     if (isDoubleFaceCard(layout)){
 
@@ -43,7 +49,9 @@ function Card(props) {
 
       return (
         <Col
-        className={style.doubleCardsContainer}>
+        className={style.doubleCardsContainer}
+        onClick={() => handleClick(card)}
+        >
             { carddoubleFaces.map((element, index) => (
                 <img 
                   className='img-fluid img-thumbnail position-absolute'
@@ -61,7 +69,9 @@ function Card(props) {
     if (!isDoubleFaceCard(layout)) {
       return (
         <Col
-        className={style.singleCardContainer}>
+        className={`${style.singleCardContainer} ${type === 'classed' ? style.cardClassed : ''}`}
+        onClick={() => handleClick(card)}
+        >
             <img 
               className='img-fluid img-thumbnail'
               src={card.image_uris['normal']} 
@@ -77,31 +87,50 @@ function Card(props) {
 
   }
 
-  const AllInfoCard = ({card}) => {
-
-    return (
-          <Row className={style.allInfoContainer}>
-            <Col className={style.cardName}>{card.name}</Col>
-            <Col className={style.cardType}>{card.type_line}</Col>
-            <Col className={style.cardCost}>{card.cost}</Col>
-          </Row>
-        )
+  const CardFatory = () => {
+    if(type === "preview"){
+      return (
+        <article className={`${style.cardContainer}`} >
+          <ActionsCard />
+          <ImageFactory 
+            layout={card.layout}
+            />
+          <div>
+          </div>
+        </article>
+      )
+    }
+    if(type === "classed"){
+      return (
+        <article className={`${style.cardContainerClassed}`}
+        style={{top: top && top + 'rem'}}
+        >
+          <ActionsCard />
+          <ImageFactory 
+            layout={card.layout}
+            />
+          <div>
+          </div>
+        </article>
+      )
+    }
+    if(type === "list"){
+      return (
+        <article className={`${style.cardContainer}`} >
+          <ActionsCard />
+          <ImageFactory 
+            layout={card.layout}/>
+          <div>
+          </div>
+        </article>
+      )
+    }
   }
 
   if (card === []) return <div>Loading...</div>
   
   return (
-    <article className={`${style.cardContainer}`} >
-      <div className={`${style.addOrRemoveLayout}`}>
-        <button onClick={() => setAddCard(card)}>Ajouter</button> 
-        <button onClick={() => setRemoveCard({card, from: currentSelect})}>supprimer</button>
-      </div>
-      <AllInfoCard card={card} />
-      <FatoryCard 
-        layout={card.layout}/>
-      <div>
-      </div>
-    </article>
+    <CardFatory />
   )
 }
 

@@ -1,12 +1,15 @@
+/* // =============== Card normal ============================== */
 .cardContainer{
+    display:flex;
+    flex-direction: column;
     position: relative;
     max-width: 240px;
     width: 240px;
     max-height: 23rem;
     height: 23rem;
+    transition: transform 0.4s ease;
 }
 
-.cardContainer:hover > .allInfoContainer,
 .cardContainer:hover > .addOrRemoveLayout{
     display: flex;
 }
@@ -75,16 +78,19 @@
     justify-content: center;
 }
 
-.allInfoContainer{
-    display: none;
-    position: absolute;
-    color: white;
-    background-color: #00000064;
-    z-index: 1100;
-    right: -240px;
-    width: 300px;
-    height: 400px;
 
-    transition: display 2s;
-    transition-delay: 1s;
+/* // =============== Card in deck list ============================== */
+
+
+.cardContainerClassed{
+    composes: cardContainer;
+    position: absolute;
+}
+
+.cardContainerClassed:hover ~ .cardContainerClassed{
+    transform: translateY(15rem);
+}
+
+.cardClassed{
+    position:absolute;
 }

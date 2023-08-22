@@ -8,7 +8,9 @@ library.add(faXmark)
 
 function SignInModal() {
 
-  const { modalState, toggleModals } = useContext(ModalContext)
+  const { stateModal } = useContext(ModalContext)
+
+    const [modalState, toggleModals] = stateModal
 
   return (
     <>

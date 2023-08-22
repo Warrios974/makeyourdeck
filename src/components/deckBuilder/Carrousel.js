@@ -97,7 +97,8 @@ function Carrousel() {
         {rowOne.map((card) => (
           <Card
             key={`${card.id}`}
-            card={card} />
+            card={card}
+            type='preview' />
         ))
         }
       </Row>
@@ -109,7 +110,8 @@ function Carrousel() {
         {rowTwo.map((card) => (
           <Card
             key={`${card.id}`}
-            card={card} />
+            card={card}
+            type='preview' />
         ))
         }
       </Row>

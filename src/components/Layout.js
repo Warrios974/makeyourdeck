@@ -7,6 +7,7 @@ import Home from '../pages/Home'
 import DeckBuilder from '../pages/DeckBuilder'
 import Decks from '../pages/Decks'
 import style from './Layout.module.css'
+import CardInfos from './CardInfos'
 
 function Layout() {
   return (
@@ -20,6 +21,7 @@ function Layout() {
             <Route path="/decks" element={ <Decks /> } />
             <Route path="/deck-builder" element={ <DeckBuilder /> } />
           </Routes>
+          <CardInfos />
         </section>
       </main>
     </Row>

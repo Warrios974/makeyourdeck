@@ -27,6 +27,7 @@ function ReserveZone() {
                 <Card 
                   key={`${index}-${card.id}`}
                   card={card}
+                  type='classed'
                   />
               ))
             }

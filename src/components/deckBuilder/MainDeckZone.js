@@ -5,7 +5,7 @@ import { sortByCost } from '../../utils/functions/mainFunction'
 import Card from './Card'
 import style from './MainDeck.module.css'
 
-function MainDeckZone() {
+function MainDecktype() {
 
   const { stateCurrentCards, stateNextPage, stateFilters, stateDeck, stateCurrentSelect } = useContext(DeckBuilderContext)
 
@@ -17,18 +17,22 @@ function MainDeckZone() {
 
   const sortDeck = sortByCost(mainDeck)
 
+  const top = 0
+
   const handleClick = () => {
     setCurrentSelect('mainDeck')
   }
 
   if (mainDeck) return (
-    <Col md={12} className={currentSelect === 'mainDeck' ? 'border border-dark text-center' : 'text-center'} onClick={() => handleClick()}>
-      <h5>MainDeckZone</h5>
-      {<div className={style.mainDeckContainer}>
+    <Col md={12} className={`${currentSelect === 'mainDeck' ? 'border border-dark text-center' : 'text-center'} ${style.mainDeckContainer}`} onClick={() => handleClick()}>
+      <h5>MainDecktype</h5>
+      {<div className={style.mainDeck}>
         {
           sortDeck.map((list, index) => (
             list.cards.length > 0 && <div
               key={`${index}-colum`}
+              className={style.column}
+              style={{height: 23 + (index * 4) + 'rem'}}
             >
               <h3>{list.columnName}</h3>
               {
@@ -36,6 +40,8 @@ function MainDeckZone() {
                   <Card
                     key={`${index}-${card.id}`}
                     card={card}
+                    type='classed'
+                    top={index * 4}
                   />
                 ))
               }
@@ -47,4 +53,4 @@ function MainDeckZone() {
   )
 }
 
-export default MainDeckZone
+export default MainDecktype

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Button } from 'react-bootstrap'
 import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
-import ManaCost from './ManaCost'
+import ManaCost from '../ManaCost'
 
 function CardSide({ card }) {
 
