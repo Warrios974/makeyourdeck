@@ -18,6 +18,10 @@ function Card(props) {
 
   const { card, type, top } = props
   
+  const isDoubleFace = isDoubleFaceCard(card.layout)
+  const carddoubleFaces = card.card_faces ? card.card_faces : []
+  const [currentCard, setCurrentCard] = useState(0)
+
   const handleDrapStart = (e, card) => {
     const stringCard = JSON.stringify(card)
     e.dataTransfer.setData("object", stringCard);
@@ -36,6 +40,15 @@ function Card(props) {
     setRemoveCard(element)
   }
 
+  const handleClickTurnCard = () => {
+    if (currentCard === 0) {
+      setCurrentCard(1)
+    } 
+    if (currentCard === 1) {
+      setCurrentCard(0)
+    } 
+  }
+
   const ActionsCard = () => {
 
     return (
@@ -43,36 +56,36 @@ function Card(props) {
         <button onClick={() => handleClickOnAddCard(card)}>+</button> 
         <button onClick={() => handleClickOnRemoveCard({card, from: currentSelect})}>-</button>
         <button onClick={() => handleClickMoreInfo({card})}>i</button>
+        {
+          isDoubleFace && <button onClick={() => handleClickTurnCard()}>T</button>
+        }
       </div>
     )
   }
 
-  const ImageFactory = ({ layout }) => {
+  const ImageFactory = () => {
 
-    if (isDoubleFaceCard(layout)){
+    if (isDoubleFace){
 
-      const carddoubleFaces = card.card_faces
+      const localCards = JSON.parse(JSON.stringify(card.card_faces))
 
       return (
         <Col
-        className={style.doubleCardsContainer}
+        className={style.singleCardContainer}
         >
-            { carddoubleFaces.map((element, index) => (
-                <img 
-                  className='img-fluid img-thumbnail position-absolute'
-                  src={element.image_uris['normal']} 
-                  key={`${index}-${card.id}-image`} 
-                  alt={element.name}
-                  loading='lazy'
-                  />
-                ))
-              }
-              
+          <img 
+              className='img-fluid img-thumbnail'
+              src={localCards[currentCard].image_uris['normal']} 
+              alt={localCards[currentCard].name}
+              id={card.id}
+              loading='lazy'
+            />
+            <ActionsCard />
         </Col>
       )
     }
 
-    if (!isDoubleFaceCard(layout)) {
+    if (!isDoubleFace) {
       return (
         <Col
         className={`${style.singleCardContainer} ${type === 'classed' ? style.cardClassed : ''}`}
@@ -98,9 +111,7 @@ function Card(props) {
       return (
         <article 
           className={`${style.cardContainer}`}>
-          <ImageFactory 
-            layout={card.layout}
-            />
+          <ImageFactory />
           <div>
           </div>
         </article>
@@ -112,9 +123,7 @@ function Card(props) {
           className={`${style.cardContainerClassed}`}
           style={{top: top && top + 'rem'}}
         >
-          <ImageFactory 
-            layout={card.layout}
-            />
+          <ImageFactory />
           <ActionsCard />
           <div>
           </div>
@@ -125,8 +134,7 @@ function Card(props) {
       return (
         <article 
           className={`${style.cardContainer}`}  >
-          <ImageFactory 
-            layout={card.layout}/>
+          <ImageFactory />
           <div>
           </div>
           <ActionsCard />
@@ -136,8 +144,6 @@ function Card(props) {
       )
     }
   }
-
-  if (card === []) return <div>Loading...</div>
   
   return (
     <CardFatory/>

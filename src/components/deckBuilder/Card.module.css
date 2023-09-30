@@ -93,6 +93,10 @@
     display: flex;
 }
 
+.doubleCardsContainer:hover .addOrRemoveLayout{
+    display: flex;
+}
+
 /* // =============== Card in deck list ============================== */
 
 
