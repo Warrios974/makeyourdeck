@@ -1,5 +1,5 @@
 import { getCards } from "../api/MagicApi"
-import { checkCommanderType, isCommanderCard, isCommanderDeck, isLegalCard, typeCard } from "../utils/functions/mainFunction"
+import { checkCommanderType, isCommanderCard, isCommanderDeck, isLegalCard, typeCard } from "../utils/functions/magicFunction"
 
 export const theDeck = {
     name: null,

@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState,useRef } from 'react'
 import { Col } from 'react-bootstrap'
 import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
-import { isDoubleFaceCard } from '../../utils/functions/mainFunction'
+import { isDoubleFaceCard } from '../../utils/functions/magicFunction'
 import style from './Card.module.css'
 import { ModalContext } from '../../contexts/modalContext'
 
@@ -23,23 +23,29 @@ function Card(props) {
     e.dataTransfer.setData("object", stringCard);
   }
 
-  const handleClick = (card) => {
+  const handleClickMoreInfo = (card) => {
     setCardInfoData(card)
     toggleModals('cardInfos')
   }
 
+  const handleClickOnAddCard = (card) => {
+    setAddCard(card)
+  }
+
+  const handleClickOnRemoveCard = (element) => {
+    setRemoveCard(element)
+  }
+
   const ActionsCard = () => {
-    return(
+
+    return (
       <div className={`${style.addOrRemoveLayout}`}>
-        <button onClick={() => setAddCard(card)}>Ajouter</button> 
-        <button onClick={() => setRemoveCard({card, from: currentSelect})}>supprimer</button>
+        <button onClick={() => handleClickOnAddCard(card)}>+</button> 
+        <button onClick={() => handleClickOnRemoveCard({card, from: currentSelect})}>-</button>
+        <button onClick={() => handleClickMoreInfo({card})}>i</button>
       </div>
     )
   }
-
-  console.log('====');
-  console.log('top',top);
-  console.log('====');
 
   const ImageFactory = ({ layout }) => {
 
@@ -50,7 +56,6 @@ function Card(props) {
       return (
         <Col
         className={style.doubleCardsContainer}
-        onClick={() => handleClick(card)}
         >
             { carddoubleFaces.map((element, index) => (
                 <img 
@@ -62,6 +67,7 @@ function Card(props) {
                   />
                 ))
               }
+              
         </Col>
       )
     }
@@ -70,7 +76,6 @@ function Card(props) {
       return (
         <Col
         className={`${style.singleCardContainer} ${type === 'classed' ? style.cardClassed : ''}`}
-        onClick={() => handleClick(card)}
         >
             <img 
               className='img-fluid img-thumbnail'
@@ -78,9 +83,10 @@ function Card(props) {
               alt={card.name}
               id={card.id}
               loading='lazy'
-              onDragStart={(e) => handleDrapStart(e, card)}
+              onDragStart={(e) => handleDrapStart}
               />
               {card.quantity && <span className={style.cardQuantity}>x{card.quantity}</span>}
+              <ActionsCard />
         </Col>
       )
     }
@@ -90,8 +96,8 @@ function Card(props) {
   const CardFatory = () => {
     if(type === "preview"){
       return (
-        <article className={`${style.cardContainer}`} >
-          <ActionsCard />
+        <article 
+          className={`${style.cardContainer}`}>
           <ImageFactory 
             layout={card.layout}
             />
@@ -102,13 +108,14 @@ function Card(props) {
     }
     if(type === "classed"){
       return (
-        <article className={`${style.cardContainerClassed}`}
-        style={{top: top && top + 'rem'}}
+        <article 
+          className={`${style.cardContainerClassed}`}
+          style={{top: top && top + 'rem'}}
         >
-          <ActionsCard />
           <ImageFactory 
             layout={card.layout}
             />
+          <ActionsCard />
           <div>
           </div>
         </article>
@@ -116,10 +123,13 @@ function Card(props) {
     }
     if(type === "list"){
       return (
-        <article className={`${style.cardContainer}`} >
-          <ActionsCard />
+        <article 
+          className={`${style.cardContainer}`}  >
           <ImageFactory 
             layout={card.layout}/>
+          <div>
+          </div>
+          <ActionsCard />
           <div>
           </div>
         </article>
@@ -130,7 +140,7 @@ function Card(props) {
   if (card === []) return <div>Loading...</div>
   
   return (
-    <CardFatory />
+    <CardFatory/>
   )
 }
 

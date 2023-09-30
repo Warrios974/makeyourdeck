@@ -20,6 +20,16 @@ function Carrousel() {
 
   let rowTwo = []
 
+  useEffect(() => {
+  }, [currentCards])
+
+  const handleScrollCarousel = (e) => {
+    e.preventDefault()
+    console.log('====');
+    console.log('variable','scrol');
+    console.log('====');
+  }
+
   const seperateCards = () => {
 
     currentCards.forEach((card, index) => {
@@ -40,24 +50,6 @@ function Carrousel() {
   const handleDrop = (e) => {
     e.preventDefault()
   }
-
-  useEffect(() => {
-    const addListener = () => {
-      const { current } = carrousel
-
-      if (!current) {
-        return
-      }
-
-      if (current) {
-        current.addEventListener('wheel', function (e) {
-          e.preventDefault()
-          current.scrollLeft += e.deltaY - 50
-        }, { passive: false });
-      }
-    }
-    addListener()
-  })
 
   if (currentCards.length === 0 || loadingData) {
     return (
@@ -81,17 +73,18 @@ function Carrousel() {
       </div>
     )
   }
-
+  
   seperateCards()
 
   return (
     <Col
       sm={12}
       className={`${style.carrouselContainer}`}
+      onScroll={(e) => handleScrollCarousel(e)}
       ref={carrousel}
     >
-      <Row
-        className={`d-flex flex-row flex-nowrap ${style.ligneContainer}`}
+      <Col
+        className={`d-flex flex-nowrap ${style.ligneContainer}`}
         onDragOver={(e) => handleDragOver(e)}
         onDrop={(e) => handleDrop(e)}>
         {rowOne.map((card) => (
@@ -101,9 +94,9 @@ function Carrousel() {
             type='preview' />
         ))
         }
-      </Row>
-      <Row
-        className={`d-flex flex-row flex-nowrap ${style.ligneContainer}`}
+      </Col>
+      <Col
+        className={`d-flex flex-nowrap ${style.ligneContainer}`}
         onDrop={(e) => handleDrop(e)}
         onDragOver={(e) => handleDragOver(e)}>
 
@@ -114,7 +107,10 @@ function Carrousel() {
             type='preview' />
         ))
         }
-      </Row>
+      </Col>
+      <div>
+        Use Shift
+      </div>
     </Col>
   )
 }

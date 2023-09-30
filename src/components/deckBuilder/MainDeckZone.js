@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Col } from 'react-bootstrap'
 import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
-import { sortByCost } from '../../utils/functions/mainFunction'
+import { sortByCost } from '../../utils/functions/magicFunction'
 import Card from './Card'
 import style from './MainDeck.module.css'
 

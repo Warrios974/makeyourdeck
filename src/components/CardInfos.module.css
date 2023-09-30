@@ -2,26 +2,33 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 500px;
+    height: 500px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #0000004b;
-    padding: 1rem 2rem;
-}
-
-.cardInfosMain{
-    padding: 2rem 0;
-    position: relative;
-}
-
-.cardInfosMain > div{
     background-color: white;
-    padding: 3rem 2rem;
-    width: 50vw;
-    max-height: 70vh;
-    overflow-y: auto;
+    box-shadow: rgba(0, 0, 0, 0.1) 15px 20px 16px;
+    transform-origin: left;
+    opacity: 0;
+    animation: aparition 100ms linear;
+    animation-fill-mode: both;
+}
+
+.rightPart{
+    width: 40%;
+    height: 100%;
+}
+
+.rightPart > img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.leftPart{
+    padding: 2rem;
+    width: 60%;
 }
 
 .cardInfosImage{
@@ -56,4 +63,13 @@
     position: absolute;
     top: 0;
     right: 0;
+}
+
+@keyframes aparition {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }

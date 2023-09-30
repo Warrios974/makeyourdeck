@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Col } from 'react-bootstrap'
 import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
-import { sortByType } from '../../utils/functions/mainFunction'
+import { sortByType } from '../../utils/functions/magicFunction'
 import Card from './Card'
 
 function CommandeZone() {

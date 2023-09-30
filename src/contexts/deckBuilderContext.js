@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import { getAutocomplete, getCard, initSortCards } from "../api/MagicApi";
 import { search, theFilter } from "../search/search";
 import { deckBuild, theDeck } from "../search/deck";
-import { sortByColors } from "../utils/functions/mainFunction";
+import { sortByColors } from "../utils/functions/magicFunction";
 
 export const DeckBuilderContext = createContext();
 
