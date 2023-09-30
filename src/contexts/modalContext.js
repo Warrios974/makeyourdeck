@@ -9,6 +9,7 @@ export function ModalContextProvider(props) {
         signInModal : false,
         initYourDeckModal : false,
         cardInfos : false,
+        sideBarDeck : true,
     })
 
     const [cardInfoData, setCardInfoData] = useState()
@@ -20,6 +21,7 @@ export function ModalContextProvider(props) {
                 signInModal : true,
                 initYourDeckModal : false,
                 cardInfos : false,
+                sideBarDeck : false,
             })
         }
         if(modal === "initYourDeck"){
@@ -27,6 +29,7 @@ export function ModalContextProvider(props) {
                 signInModal : false,
                 initYourDeckModal : true,
                 cardInfos : false,
+                sideBarDeck : false,
             })
         }
         if(modal === "cardInfos"){
@@ -34,6 +37,15 @@ export function ModalContextProvider(props) {
                 signInModal : false,
                 initYourDeckModal : false,
                 cardInfos : true,
+                sideBarDeck : false,
+            })
+        }
+        if(modal === "sideBarDeck"){
+            setModalState({
+                signInModal : false,
+                initYourDeckModal : false,
+                cardInfos : false,
+                sideBarDeck : true,
             })
         }
         if(modal === "close"){
@@ -41,6 +53,7 @@ export function ModalContextProvider(props) {
                 signInModal : false,
                 initYourDeckModal : false,
                 cardInfos : false,
+                sideBarDeck : false,
             })
         }
     }

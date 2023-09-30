@@ -31,6 +31,7 @@ function DeckBuilder() {
             <SearchAndFilterDeckForm />
             <Carrousel />
             <DeckSection />
+            <Sidebar />
         </>
     )
 }

@@ -1,0 +1,18 @@
+.sidebarContainer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.sidebarContainer .mainContainer {
+    background-color: white;
+    height: 100%;
+    width: 379px;
+}
+
+.hideBtn {
+    
+}

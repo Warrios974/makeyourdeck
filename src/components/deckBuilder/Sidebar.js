@@ -2,12 +2,21 @@ import React, { useContext } from 'react'
 import { Col } from 'react-bootstrap'
 import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
 import CardSide from './CardSide'
+import style from './Sidebar.module.css'
+import { ModalContext } from '../../contexts/modalContext'
 
 function Sidebar() {
 
   const { stateDeck } = useContext(DeckBuilderContext)
+  const { stateModal } = useContext(ModalContext)
+
+  const [ modalState, toggleModals ] = stateModal
 
   const [currentDeck, setCurrentDeck, setAddCard, setRemoveCard] = stateDeck
+
+  console.log('====');
+  console.log('curren',currentDeck);
+  console.log('====');
 
   const handleDragOver = (e) => {
     e.preventDefault()
@@ -19,35 +28,33 @@ function Sidebar() {
     const data = JSON.parse(stringData)
     setAddCard(data)
   }
-  
-  if (currentDeck.cards.mainDeck.length <= 1) return (
-    <Col sm={4}>
-      <aside
-        onDragOver={(e) => handleDragOver(e)}
-        onDrop={(e) => handleDrop(e)}>
-        Aucune carte dans votre deck
-      </aside>
-    </Col>
-    )
 
-  const mainDeck = currentDeck.cards.mainDeck
-  
+  const mainDeck = currentDeck.cards.mainDeck.cards
+
   return (
-    <Col sm={4}>
       <aside 
-        className='d-flex flex-column'
+        className={style.sidebarContainer}
         onDragOver={(e) => handleDragOver(e)}
         onDrop={(e) => handleDrop(e)}
         >
-      { mainDeck.map((card) => (
-        card.id && 
-          <CardSide
-          key={`${card.id}`} 
-          card={card}/>
-        ))
-      }
+        <div>
+          { modalState.sideBarDeck && <button onClick={() => toggleModals('close')} > close </button>}
+          { !modalState.sideBarDeck && <button onClick={() => toggleModals('sideBarDeck')} > open </button>}
+        </div>
+        {
+          modalState.sideBarDeck && 
+          <div className={style.mainContainer}>
+            { (mainDeck.length > 0) && mainDeck.map((card) => (
+              card.id && 
+                <CardSide
+                key={`${card.id}-sidebar`} 
+                card={card}/>
+              ))
+            }
+            { mainDeck.length === 0 && <span>Aucune carte dans votre deck</span> }
+          </div>
+        }
       </aside>
-    </Col>
   )
 }
 
