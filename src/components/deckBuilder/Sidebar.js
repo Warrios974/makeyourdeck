@@ -4,6 +4,7 @@ import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
 import CardSide from './CardSide'
 import style from './Sidebar.module.css'
 import { ModalContext } from '../../contexts/modalContext'
+import Card from './Card'
 
 function Sidebar() {
 
@@ -45,8 +46,9 @@ function Sidebar() {
           <div className={`${style.mainContainer}`}>
             { (mainDeck.length > 0) && mainDeck.map((card) => (
               card.id && 
-                <CardSide
+                <Card
                 key={`${card.id}-sidebar`} 
+                type='list'
                 card={card}/>
               ))
             }

@@ -4,6 +4,8 @@ import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
 import { isDoubleFaceCard } from '../../utils/functions/magicFunction'
 import style from './Card.module.css'
 import { ModalContext } from '../../contexts/modalContext'
+import { Button } from 'react-bootstrap'
+import ManaCost from '../ManaCost'
 
 function Card(props) {
   
@@ -21,6 +23,8 @@ function Card(props) {
   const isDoubleFace = isDoubleFaceCard(card.layout)
   const carddoubleFaces = card.card_faces ? card.card_faces : []
   const [currentCard, setCurrentCard] = useState(0)
+  
+  const manaCost = card.mana_cost ? card.mana_cost : card.card_faces[0].mana_cost
 
   const handleDrapStart = (e, card) => {
     const stringCard = JSON.stringify(card)
@@ -70,9 +74,7 @@ function Card(props) {
       const localCards = JSON.parse(JSON.stringify(card.card_faces))
 
       return (
-        <Col
-        className={style.singleCardContainer}
-        >
+        <>
           <img 
               className='img-fluid img-thumbnail'
               src={localCards[currentCard].image_uris['normal']} 
@@ -80,16 +82,13 @@ function Card(props) {
               id={card.id}
               loading='lazy'
             />
-            <ActionsCard />
-        </Col>
+        </>
       )
     }
 
     if (!isDoubleFace) {
       return (
-        <Col
-        className={`${style.singleCardContainer} ${type === 'classed' ? style.cardClassed : ''}`}
-        >
+        <>
             <img 
               className='img-fluid img-thumbnail'
               src={card.image_uris['normal']} 
@@ -98,9 +97,7 @@ function Card(props) {
               loading='lazy'
               onDragStart={(e) => handleDrapStart}
               />
-              {card.quantity && <span className={style.cardQuantity}>x{card.quantity}</span>}
-              <ActionsCard />
-        </Col>
+        </>
       )
     }
 
@@ -110,10 +107,9 @@ function Card(props) {
     if(type === "preview"){
       return (
         <article 
-          className={`${style.cardContainer}`}>
+          className={`${style.singleCardContainer}`} >
           <ImageFactory />
-          <div>
-          </div>
+          <ActionsCard />
         </article>
       )
     }
@@ -121,25 +117,22 @@ function Card(props) {
       return (
         <article 
           className={`${style.cardContainerClassed}`}
-          style={{top: top && top + 'rem'}}
-        >
+          style={{top: top && top + 'rem'}} >
           <ImageFactory />
           <ActionsCard />
-          <div>
-          </div>
         </article>
       )
     }
     if(type === "list"){
       return (
-        <article 
-          className={`${style.cardContainer}`}  >
+        <article className={style.cardContainerListed}>
+          <Button
+              className='m-2'>
+              <span>{card.quantity}x </span>
+              <span>{card.name}</span>
+              <ManaCost manaCost={manaCost} />
+          </Button>
           <ImageFactory />
-          <div>
-          </div>
-          <ActionsCard />
-          <div>
-          </div>
         </article>
       )
     }

@@ -9,18 +9,15 @@ function CardSide({ card }) {
 
     const [currentDeck, setCurrentDeck, setAddCard, setRemoveCard] = stateDeck
 
+    const manaCost = card.mana_cost ? card.mana_cost : card.card_faces[0].mana_cost
+
   return (
-    <div>
     <Button
-        onClick={() => setRemoveCard(card)}
         className='m-2'>
-        
         <span>{card.quantity}x </span>
         <span>{card.name}</span>
-        <ManaCost manaCost={card.mana_cost} />
-
+        <ManaCost manaCost={manaCost} />
     </Button>
-    </div>
   )
 }
 

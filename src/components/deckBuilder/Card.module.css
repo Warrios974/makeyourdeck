@@ -1,19 +1,11 @@
 /* // =============== Card normal ============================== */
-.cardContainer{
+.singleCardContainer{
     display:flex;
     flex-direction: column;
     position: relative;
-    max-width: 240px;
-    width: 240px;
-    max-height: 23rem;
-    height: 23rem;
     transition: transform 0.4s ease;
-}
-
-.singleCardContainer{
     position: relative;
     width: 100%;
-    height: 100%;
 }
 
 .singleCardContainer > .cardQuantity{
@@ -39,38 +31,11 @@
     transform: scale(1.24);
 }
 
-.doubleCardsContainer{
-    position: relative;
-    max-width: 215px;
-    width: 215px;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-.doubleCardsContainer > img{
-    position: absolute;
-    width: 100%;
-    max-width: 215px;
-    width: 215px;
-}
-
-.doubleCardsContainer > img:first-of-type{
-    opacity: 1;
-    max-width: 215px;
-    width: 215px;
-}
-
-.doubleCardsContainer > img:last-of-type {
-    opacity: 0;
-    max-width: 215px;
-    width: 215px;
-}
-
 /* // =============== Add in deck ============================== */
 
 .addOrRemoveLayout{
     position: absolute;
+    bottom: 0;
     max-width: 215px;
     width: 215px;
     display: none;
@@ -93,22 +58,32 @@
     display: flex;
 }
 
-.doubleCardsContainer:hover .addOrRemoveLayout{
-    display: flex;
-}
-
 /* // =============== Card in deck list ============================== */
 
 
 .cardContainerClassed{
-    composes: cardContainer;
+    composes: singleCardContainer;
     position: absolute;
 }
 
 .cardContainerClassed:hover ~ .cardContainerClassed{
-    transform: translateY(15rem);
+    transform: translateY(17rem);
 }
 
 .cardClassed{
     position:absolute;
+}
+
+/* // =============== Card in list deck ============================== */
+.cardContainerListed{
+    position: relative;
+    
+}
+.cardContainerListed:hover > img{
+    display: inline;
+}
+.cardContainerListed > img{
+    display: none;
+    position: absolute;
+    left: -379px;
 }
