@@ -13,6 +13,28 @@
     width: 379px;
 }
 
-.hideBtn {
-    
+.open {
+    animation: sideBarTranslationLeft 500ms ease both;
+}
+
+.close {
+    animation: sideBarTranslationRigth 500ms ease both;
+}
+
+@keyframes sideBarTranslationRigth {
+    0%{
+        transform: translateX(0);
+    }
+    100%{
+        transform: translateX(379px);
+    }
+}
+
+@keyframes sideBarTranslationLeft {
+    0%{
+        transform: translateX(500px);
+    }
+    100%{
+        transform: translateX(0);
+    }
 }

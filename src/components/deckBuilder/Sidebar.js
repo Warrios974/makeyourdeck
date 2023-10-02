@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Col } from 'react-bootstrap'
 import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
 import CardSide from './CardSide'
@@ -13,6 +13,7 @@ function Sidebar() {
   const [ modalState, toggleModals ] = stateModal
 
   const [currentDeck, setCurrentDeck, setAddCard, setRemoveCard] = stateDeck
+  const [classStyle, setClassStyle] = useState(style.open)
 
   console.log('====');
   console.log('curren',currentDeck);
@@ -33,7 +34,7 @@ function Sidebar() {
 
   return (
       <aside 
-        className={style.sidebarContainer}
+        className={`${style.sidebarContainer} ${modalState.sideBarDeck ? style.open : style.close}`}
         onDragOver={(e) => handleDragOver(e)}
         onDrop={(e) => handleDrop(e)}
         >
@@ -41,9 +42,7 @@ function Sidebar() {
           { modalState.sideBarDeck && <button onClick={() => toggleModals('close')} > close </button>}
           { !modalState.sideBarDeck && <button onClick={() => toggleModals('sideBarDeck')} > open </button>}
         </div>
-        {
-          modalState.sideBarDeck && 
-          <div className={style.mainContainer}>
+          <div className={`${style.mainContainer}`}>
             { (mainDeck.length > 0) && mainDeck.map((card) => (
               card.id && 
                 <CardSide
@@ -53,7 +52,6 @@ function Sidebar() {
             }
             { mainDeck.length === 0 && <span>Aucune carte dans votre deck</span> }
           </div>
-        }
       </aside>
   )
 }
