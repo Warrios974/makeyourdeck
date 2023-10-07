@@ -7,12 +7,10 @@ import { ReactComponent as GreenManaSvg } from "../../../assets/icons/mtg/G.svg"
 import { ReactComponent as BlackManaSvg } from "../../../assets/icons/mtg/B.svg";
 import { ReactComponent as ColorlessManaSvg } from "../../../assets/icons/mtg/C.svg";
 import { getAutocomplete } from '../../../api/MagicApi';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import { Col, Form, InputGroup, ListGroup, Row } from 'react-bootstrap';
+import { Col, Form, Row } from 'react-bootstrap';
 import { DeckBuilderContext } from '../../../contexts/deckBuilderContext';
 import style from './searchAndFilterForm.module.css'
-import formStyle from '../Form.module.css'
 import Select from 'react-select';
 import AsyncSelect from 'react-select/async';
 
@@ -27,6 +25,12 @@ function SearchAndFilterForm() {
   const [listNameCard, setListNameCard] = useState([])
   
   const inputNameCard = document.getElementById('formGridName')
+
+  const filterColorWhite = filters.colors.includes('white')
+  const filterColorBlue = filters.colors.includes('blue')
+  const filterColorBlack = filters.colors.includes('black')
+  const filterColorRed = filters.colors.includes('red')
+  const filterColorGreen = filters.colors.includes('green')
 
   const typeList = [
     { value: 'planeswalker', label: 'Planeswalker' },
@@ -232,7 +236,7 @@ function SearchAndFilterForm() {
                     <Col 
                       key={color.name} 
                       onClick={(e) => addAFilter(e,'color',color.name)}
-                      className='btn btn__mana'
+                      className={`btn btn__mana ${filters.colors.includes(color.name) && style.btnActive}` }
                     >
                       {color.component}
                     </Col>

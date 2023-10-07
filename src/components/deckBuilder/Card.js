@@ -24,7 +24,13 @@ function Card(props) {
   const carddoubleFaces = card.card_faces ? card.card_faces : []
   const [currentCard, setCurrentCard] = useState(0)
   
-  const manaCost = card.mana_cost ? card.mana_cost : card.card_faces[0].mana_cost
+  let manaCost = ''
+  if(card.mana_cost) manaCost =  card.mana_cost
+  if(card.card_faces) manaCost = card.card_faces[0].mana_cost
+
+  console.log('====');
+  console.log('manaCost',manaCost);
+  console.log('====');
 
   const handleDrapStart = (e, card) => {
     const stringCard = JSON.stringify(card)
