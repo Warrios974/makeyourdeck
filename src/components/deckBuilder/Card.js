@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState,useRef } from 'react'
 import { Col } from 'react-bootstrap'
 import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
-import { isDoubleFaceCard } from '../../utils/functions/magicFunction'
+import { isCommanderDeck, isDoubleFaceCard } from '../../utils/functions/magicFunction'
 import style from './Card.module.css'
 import { ModalContext } from '../../contexts/modalContext'
 import { Button } from 'react-bootstrap'
@@ -21,16 +21,13 @@ function Card(props) {
   const { card, type, top } = props
   
   const isDoubleFace = isDoubleFaceCard(card.layout)
-  const carddoubleFaces = card.card_faces ? card.card_faces : []
   const [currentCard, setCurrentCard] = useState(0)
   
+  const [addListVisible, setAddListVisible] = useState(false)
+
   let manaCost = ''
   if(card.mana_cost) manaCost =  card.mana_cost
   if(card.card_faces) manaCost = card.card_faces[0].mana_cost
-
-  console.log('====');
-  console.log('manaCost',manaCost);
-  console.log('====');
 
   const handleDrapStart = (e, card) => {
     const stringCard = JSON.stringify(card)
@@ -42,8 +39,8 @@ function Card(props) {
     toggleModals('cardInfos')
   }
 
-  const handleClickOnAddCard = (card) => {
-    setAddCard(card)
+  const handleClickOnAddCard = (card, zone) => {
+    setAddCard({ card: card, zone: zone})
   }
 
   const handleClickOnRemoveCard = (element) => {
@@ -59,11 +56,43 @@ function Card(props) {
     } 
   }
 
+  const handleChangeListVisibility = (value) => setAddListVisible(value)
+
+  const AddListFactory = () => {
+
+    const deckType = isCommanderDeck(currentDeck.type)
+
+    return (
+    <ul>
+      <li>
+        {deckType && <button
+          onClick={() => handleClickOnAddCard(card, 'commander')}
+        >Commander</button>}
+      </li>
+      <li>
+        <button
+          onClick={() => handleClickOnAddCard(card, 'mainDeck')}
+        >Bibliothéque</button>
+      </li>
+      <li>
+        {!deckType && <button
+          onClick={() => handleClickOnAddCard(card, 'reserve')}
+        >Reserve</button>}
+      </li>
+    </ul>
+    )
+  }
+
   const ActionsCard = () => {
 
     return (
       <div className={`${style.addOrRemoveLayout}`}>
-        <button onClick={() => handleClickOnAddCard(card)}>+</button> 
+        <div className={style.btnAddCard}>
+          <button onClick={() => handleChangeListVisibility(!addListVisible)}>+</button> 
+          {addListVisible && 
+            <AddListFactory />
+          }
+        </div>
         <button onClick={() => handleClickOnRemoveCard({card, from: currentSelect})}>-</button>
         <button onClick={() => handleClickMoreInfo({card})}>i</button>
         {
@@ -113,7 +142,9 @@ function Card(props) {
     if(type === "preview"){
       return (
         <article 
-          className={`${style.singleCardContainer}`} >
+          className={`${style.singleCardContainer}`} 
+          onMouseLeave={() => setAddListVisible(false)}
+          >
           <ImageFactory />
           <ActionsCard />
         </article>
@@ -123,6 +154,7 @@ function Card(props) {
       return (
         <article 
           className={`${style.cardContainerClassed}`}
+          onMouseLeave={() => setAddListVisible(false)}
           style={{top: top && top + 'rem'}} >
           <ImageFactory />
           <ActionsCard />

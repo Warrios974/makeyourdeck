@@ -74,7 +74,7 @@ export function DeckBuilderContextProvider(props) {
             if (addCard) {
                 setLoadingData(true)
                 const init = deckBuild(currentDeck)
-                const newDeck = init.addCard(addCard, currentSelect)
+                const newDeck = init.addCard(addCard.card, addCard.zone)
                 setCurrentDeck(newDeck)
                 setAddCard()
                 setLoadingData(false)

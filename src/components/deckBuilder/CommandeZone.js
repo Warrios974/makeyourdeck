@@ -34,6 +34,7 @@ function CommandeZone() {
                 sortCards.map((card, index) => (
                     <Card 
                       key={`${index}-${card.id}`}
+                      type='preview'
                       card={card}
                       />
                 ))
