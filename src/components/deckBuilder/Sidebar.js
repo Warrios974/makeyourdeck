@@ -14,11 +14,6 @@ function Sidebar() {
   const [ modalState, toggleModals ] = stateModal
 
   const [currentDeck, setCurrentDeck, setAddCard, setRemoveCard] = stateDeck
-  const [classStyle, setClassStyle] = useState(style.open)
-
-  console.log('====');
-  console.log('curren',currentDeck);
-  console.log('====');
 
   const handleDragOver = (e) => {
     e.preventDefault()
@@ -32,6 +27,14 @@ function Sidebar() {
   }
 
   const mainDeck = currentDeck.cards.mainDeck.cards
+  const reserve = currentDeck.cards.reserve === null ? null : currentDeck.cards.reserve.cards
+  const commander = currentDeck.cards.commander === null ? null : currentDeck.cards.commander.cards
+
+  const mainDeckCurrentCards = currentDeck.cards.mainDeck.currentTotalCards
+  const reserveCurrentCards = reserve ? currentDeck.cards.reserve.currentTotalCards : null
+
+  const mainDeckTotalCards = currentDeck.cards.mainDeck.total
+  const reserveTotalCards = reserve ? currentDeck.cards.reserve.total : null
 
   return (
       <aside 
@@ -44,16 +47,46 @@ function Sidebar() {
           { !modalState.sideBarDeck && <button onClick={() => toggleModals('sideBarDeck')} > open </button>}
         </div>
           <div className={`${style.mainContainer}`}>
-            { (mainDeck.length > 0) && mainDeck.map((card) => (
-              card.id && 
-                <Card
-                key={`${card.id}-sidebar`} 
-                type='list'
-                card={card}/>
-              ))
-            }
-            { mainDeck.length === 0 && <span>Aucune carte dans votre deck</span> }
+            {commander !== null && <div className="">
+              <h3>Commander zone</h3>
+              { (commander.length > 0) && commander.map((card) => (
+                card.id && 
+                  <Card
+                  key={`${card.id}-sidebar`} 
+                  type='list'
+                  card={card}/>
+                ))
+              }
+              { commander.length === 0 && <span>Aucune carte de commander</span> }
+            </div>}
+            
+            <div className="">
+              <h3>Main deck zone { mainDeckCurrentCards && <span>{mainDeckCurrentCards + "/" + mainDeckTotalCards}</span> }</h3>
+              { (mainDeck.length > 0) && mainDeck.map((card) => (
+                card.id && 
+                  <Card
+                  key={`${card.id}-sidebar`} 
+                  type='list'
+                  card={card}/>
+                ))
+              }
+              { mainDeck.length === 0 && <span>Aucune carte dans votre deck</span> }
+            </div>
+
+            {reserve !== null && <div className="">
+              <h3>Reserve zone { reserveCurrentCards && <span>{reserveCurrentCards + "/" + reserveTotalCards}</span> }</h3>
+              { (reserve.length > 0) && reserve.map((card) => (
+                card.id && 
+                  <Card
+                  key={`${card.id}-sidebar`} 
+                  type='list'
+                  card={card}/>
+                ))
+              }
+              { reserve.length === 0 && <span>Aucune carte dans votre reserve</span> }
+            </div>}
           </div>
+          
       </aside>
   )
 }

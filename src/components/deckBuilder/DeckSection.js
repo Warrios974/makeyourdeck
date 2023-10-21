@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Col, Row } from 'react-bootstrap'
+import { Row } from 'react-bootstrap'
 import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
 import CommandeZone from './CommandeZone'
 import MainDeckZone from './MainDeckZone'
 import ReserveZone from './ReserveZone'
 import { isCommanderDeck } from '../../utils/functions/magicFunction'
+
 function DeckSection() {
 
     const { stateDeck } = useContext(DeckBuilderContext)

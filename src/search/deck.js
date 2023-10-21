@@ -30,6 +30,7 @@ export function deckBuild(deck) {
             let commanderType = localDeck.cards.commander.type
             
             let mainDeck = localDeck.cards.mainDeck.cards
+
             const cardInMainDeck = mainDeck.find(element => element.id === currentCard['id'])
 
             if (cardInMainDeck) {
@@ -54,6 +55,7 @@ export function deckBuild(deck) {
 
                         localDeck.cards.commander.type = typeCommander
                         commanderCard.push(currentCard)
+                        localDeck.cards.commander.currentTotalCards += 1
                         return localDeck
                     }
 
@@ -71,6 +73,7 @@ export function deckBuild(deck) {
                     if (commanderType === "Friends forever" && commanderCard.length < 2) {
                         if (currentCard.keywords.includes('Friends forever')) {
                             commanderCard.push(currentCard)
+                            localDeck.cards.commander.currentTotalCards += 1
                             return localDeck
                         }
 
@@ -86,6 +89,7 @@ export function deckBuild(deck) {
                         }
                         if (commanderCardName === namePartner) {
                             commanderCard.push(currentCard)
+                            localDeck.cards.commander.currentTotalCards += 1
                             return localDeck
                         }
                     }
@@ -99,6 +103,7 @@ export function deckBuild(deck) {
                     }
 
                     commanderCard.push(currentCard)
+                    localDeck.cards.commander.currentTotalCards += 1
                     return localDeck
                 }
                 
@@ -142,17 +147,20 @@ export function deckBuild(deck) {
                         if (commanderCard.length === 0) {
                             if(typeCard === 'Planeswalker') localDeck.cards.commander.type = typeCommander
                             commanderCard.push(currentCard)
+                            localDeck.cards.commander.currentTotalCards += 1
                             return localDeck
                         }
                         if (commanderCard.length > 0) {
                             if (typeCardsInCommandeZone.includes("Planeswalker")) {
                                 commanderCard.push(currentCard)
+                                localDeck.cards.commander.currentTotalCards += 1
                                 return localDeck
                             }
                             
                             if (typeCardsInCommandeZone.includes("Instant") || typeCardsInCommandeZone.includes("Sorcery")) {
                                 localDeck.cards.commander.type = typeCommander
                                 commanderCard.push(currentCard)
+                                localDeck.cards.commander.currentTotalCards += 1
                                 return localDeck
                             }
 
@@ -184,6 +192,7 @@ export function deckBuild(deck) {
                 if (!cardInMainDeck) {
                     currentCard['quantity'] = 1
                     mainDeck.push(currentCard)
+                    localDeck.cards.mainDeck.currentTotalCards += 1
                     return localDeck
                 }
 
@@ -199,6 +208,7 @@ export function deckBuild(deck) {
                 if (!cardInMainDeck) {
                     currentCard['quantity'] = 1
                     mainDeck.push(currentCard)
+                    localDeck.cards.mainDeck.currentTotalCards += 1
                     return localDeck
                 }
                 
@@ -210,6 +220,7 @@ export function deckBuild(deck) {
                 if (cardInMainDeck) {
                     if (localDeck.cards.numberExemple === 1) return localDeck
                     if (totalCopiesCard < 4) cardInMainDeck.quantity += 1
+                    localDeck.cards.mainDeck.currentTotalCards += 1
                     return localDeck
                 }
             }
@@ -229,6 +240,7 @@ export function deckBuild(deck) {
             if (!cardInReserveDeck) {
                 currentCard['quantity'] = 1
                 reserveDeck.push(currentCard)
+                localDeck.cards.reserve.currentTotalCards += 1
                 return localDeck
             }
             
@@ -240,6 +252,7 @@ export function deckBuild(deck) {
             if (cardInReserveDeck) {
                 if (localDeck.cards.numberExemple === 1) return localDeck
                 if (totalCopiesCard < 4) cardInReserveDeck.quantity += 1
+                localDeck.cards.reserve.currentTotalCards += 1
                 return localDeck
             }
             
@@ -262,6 +275,7 @@ export function deckBuild(deck) {
             if (cardInMainDeck) {
                 if ((cardInMainDeck.quantity < 4 || cardInMainDeck.quantity === 4) && cardInMainDeck.quantity > 0) cardInMainDeck.quantity -= 1
                 if (cardInMainDeck.quantity === 0) mainDeck = mainDeck.filter((element) => element.id !== card.id)
+                localDeck.cards.mainDeck.currentTotalCards -= 1
             }
 
             localDeck.cards.mainDeck.cards = mainDeck
@@ -277,6 +291,7 @@ export function deckBuild(deck) {
     
             if (cardInMainDeck) {
                 commander.cards = commander.cards.filter((element) => element.id !== cardId)
+                localDeck.cards.commander.currentTotalCards -= 1
             }
 
             if (commander.cards.length === 0) {
@@ -293,6 +308,7 @@ export function deckBuild(deck) {
             if (cardInReserveDeck) {
                 if ((cardInReserveDeck.quantity < 4 || cardInReserveDeck.quantity === 4) && cardInReserveDeck.quantity > 0) cardInReserveDeck.quantity -= 1
                 if (cardInReserveDeck.quantity === 0) reserve = reserve.filter((element) => element.id !== card.id)
+                localDeck.cards.reserve.currentTotalCards -= 1
             }
 
             localDeck.cards.reserve.cards = reserve
@@ -376,9 +392,9 @@ export function initDeck(name, format, deck){
         numberExemple : null
     }
 
-    if (roles.totalDeckCard) localCards.mainDeck = {cards: [], total : roles.totalDeckCard}
-    if (roles.reserveDeckCard) localCards.reserve = {cards: [], total : roles.reserveDeckCard}
-    if (roles.commander) localCards.commander = {type: null, cards: []}
+    if (roles.totalDeckCard) localCards.mainDeck = {cards: [], total : roles.totalDeckCard, currentTotalCards: 0}
+    if (roles.reserveDeckCard) localCards.reserve = {cards: [], total : roles.reserveDeckCard, currentTotalCards: 0}
+    if (roles.commander) localCards.commander = {type: null, cards: [], currentTotalCards: 0}
     if (roles.numberCopy) localCards.numberExemple = roles.numberCopy
 
     localDeck.cards = localCards
