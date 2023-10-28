@@ -6,8 +6,18 @@
     margin-top: 2rem;
 }
 
+.loaderContainer{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40rem;
+}
+
 .ligneContainer{
     display: flex;
+    flex-wrap: nowrap;
     gap: 1rem;
     margin-top: 2rem;
     margin-left: 2rem;

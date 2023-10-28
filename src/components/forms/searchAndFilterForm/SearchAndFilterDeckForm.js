@@ -194,6 +194,7 @@ function SearchAndFilterForm() {
             name='searchByName'
             id='searchByName'
             styles={colorStyles}
+            placeholder="Jace"
           />
         </div>
         <div
@@ -224,6 +225,7 @@ function SearchAndFilterForm() {
             id='searchBytypes'
             name="searchBytypes"
             styles={colorStyles}
+            placeholder="Creature"
           />
         </div>
       </div>
@@ -241,6 +243,7 @@ function SearchAndFilterForm() {
             styles={colorStyles}
             name="searchByRarity"
             id='searchByRarity'
+            placeholder="Rare"
           />
         </div>
         <div

@@ -1,10 +1,10 @@
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import React, { useContext, useEffect, useRef } from 'react'
-import { Col, Row } from 'react-bootstrap'
 import { DeckBuilderContext } from '../../contexts/deckBuilderContext'
 import Card from './Card'
 import style from './Carrousel.module.css'
+import globalStyle from '../../utils/styles/global.module.css'
 
 library.add(faChevronLeft, faChevronRight)
 
@@ -53,11 +53,12 @@ function Carrousel() {
 
   if (currentCards.length === 0 || loadingData) {
     return (
-      <Col sm={12}>
-        <Row className='overflow-auto' style={{ height: "40rem" }}>
-          Loading
-        </Row>
-      </Col>
+      <div 
+      className={`${style.carrouselContainer}`}>
+        <div className={style.loaderContainer}>
+          <span className={globalStyle.loader}></span>
+        </div>
+      </div>
     )
   }
 
@@ -77,14 +78,13 @@ function Carrousel() {
   seperateCards()
 
   return (
-    <Col
-      sm={12}
+    <div
       className={`${style.carrouselContainer}`}
       onScroll={(e) => handleScrollCarousel(e)}
       ref={carrousel}
     >
-      <Col
-        className={`d-flex flex-nowrap ${style.ligneContainer}`}
+      <div
+        className={`${style.ligneContainer}`}
         onDragOver={(e) => handleDragOver(e)}
         onDrop={(e) => handleDrop(e)}>
         {rowOne.map((card) => (
@@ -94,9 +94,9 @@ function Carrousel() {
             type='preview' />
         ))
         }
-      </Col>
-      <Col
-        className={`d-flex flex-nowrap ${style.ligneContainer}`}
+      </div>
+      <div
+        className={`${style.ligneContainer}`}
         onDrop={(e) => handleDrop(e)}
         onDragOver={(e) => handleDragOver(e)}>
 
@@ -107,11 +107,11 @@ function Carrousel() {
             type='preview' />
         ))
         }
-      </Col>
+      </div>
       <div>
         Use Shift
       </div>
-    </Col>
+    </div>
   )
 }
 

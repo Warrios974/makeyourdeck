@@ -6,6 +6,12 @@ export const colorStyles = {
         borderRadius: "40px",
         padding: ".3rem .5rem",
     }),
+    menu: (styles) => ({
+        ...styles, 
+        backgroundColor: "#000",
+        borderRadius: "20px",
+        overflow: "hidden",
+    }),
     option: (styles, {data, isDisable, isFocused, isSelected}) => {
         return {
             ...styles, 
@@ -15,7 +21,7 @@ export const colorStyles = {
     }, 
     placeholder: (styles) => ({
         ...styles, 
-        color: "#FFF"
+        color: "#b3b3b3"
     }),
     input: (styles) => ({
         ...styles, 
