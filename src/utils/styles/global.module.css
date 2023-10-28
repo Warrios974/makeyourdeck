@@ -1,0 +1,36 @@
+.linkContainer{
+    display: flex;
+    gap: 1rem;
+    background-color: black;
+    padding: .5rem ;
+    border-radius: 2rem;
+}
+
+.link{
+    display: block;
+    padding: .5rem 0;
+    text-align: center;
+    height: 40px;
+    width: 40px;
+    background-color: gray;
+    border-radius: 50%;
+    color: black;
+}
+
+.magicCard{
+    width: 215px;
+    border-radius: 15px;
+}
+
+.btn{
+    padding: .4rem 2rem;
+    background-color: #000;
+    color: #FFF;
+    border-radius: 40px;
+    border: none;
+}
+
+.btnPrimary{
+    background-color: #ff8800;
+    color: #000;
+}

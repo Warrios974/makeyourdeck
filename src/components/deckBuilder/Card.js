@@ -6,6 +6,7 @@ import style from './Card.module.css'
 import { ModalContext } from '../../contexts/modalContext'
 import { Button } from 'react-bootstrap'
 import ManaCost from '../ManaCost'
+import globalStyles from '../../utils/styles/global.module.css'
 
 function Card(props) {
   
@@ -85,6 +86,16 @@ function Card(props) {
 
   const ActionsCard = () => {
 
+    if(type === "list") return (
+      <span className={`${style.addOrRemoveLayoutList}`}>
+        <button onClick={() => handleChangeListVisibility(!addListVisible)}>+</button> 
+        {addListVisible && 
+          <AddListFactory />
+        }
+        <button onClick={() => handleClickOnRemoveCard({card, from: currentSelect})}>-</button>
+      </span>
+    )
+
     return (
       <div className={`${style.addOrRemoveLayout}`}>
         <div className={style.btnAddCard}>
@@ -111,7 +122,7 @@ function Card(props) {
       return (
         <>
           <img 
-              className='img-fluid img-thumbnail'
+              className={`${globalStyles.magicCard} ${style.images} `}
               src={localCards[currentCard].image_uris['normal']} 
               alt={localCards[currentCard].name}
               id={card.id}
@@ -125,7 +136,7 @@ function Card(props) {
       return (
         <>
             <img 
-              className='img-fluid img-thumbnail'
+              className={`${globalStyles.magicCard} ${style.images} `}
               src={card.image_uris['normal']} 
               alt={card.name}
               id={card.id}
@@ -164,12 +175,12 @@ function Card(props) {
     if(type === "list"){
       return (
         <article className={style.cardContainerListed}>
-          <Button
-              className='m-2'>
+          <div>
               <span>{card.quantity}x </span>
               <span>{card.name}</span>
               <ManaCost manaCost={manaCost} />
-          </Button>
+              <ActionsCard />
+          </div>
           <ImageFactory />
         </article>
       )

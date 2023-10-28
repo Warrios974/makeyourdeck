@@ -8,11 +8,12 @@ import { ReactComponent as BlackManaSvg } from "../../../assets/icons/mtg/B.svg"
 import { ReactComponent as ColorlessManaSvg } from "../../../assets/icons/mtg/C.svg";
 import { getAutocomplete } from '../../../api/MagicApi';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import { Col, Form, Row } from 'react-bootstrap';
 import { DeckBuilderContext } from '../../../contexts/deckBuilderContext';
 import style from './searchAndFilterForm.module.css'
 import Select from 'react-select';
 import AsyncSelect from 'react-select/async';
+import { colorStyles } from '../../../utils/styles/react-select-style'
+import styleForm from '../Form.module.css'
 
 library.add(faXmark)
 
@@ -180,73 +181,88 @@ function SearchAndFilterForm() {
   };
 
   return (
-    <Form>
-      <Form.Group>
-          <Row className='my-3'>
-            <Form.Group as={Col} controlId="formGridName" className='position-relative'>
-              <label htmlFor='searchByName'>Nom de la carte</label>
-              <AsyncSelect
-                onChange={onInputNameChange}
-                loadOptions={searchCardName}
-                isClearable
-                isSearchable
-                name='searchByName'
-                id='searchByName'
-              />
-            </Form.Group>
-
-            <Form.Group as={Col} controlId="formGridSearchDescription">
-              <Form.Label>Search in description</Form.Label>
-              <Form.Control type='text' onChange={(e) => addAFilter(e,'oracle',e.target.value)}/>
-            </Form.Group>
-
-            <Form.Group as={Col} controlId="formGridType">
-              <label htmlFor='searchBytypes'>Type de carte</label>
-              <Select
-                closeMenuOnSelect={false}
-                onChange={onInputTypeChange}
-                isMulti
-                options={typeList}
-                isClearable
-                isSearchable
-                id='searchBytypes'
-                name="searchBytypes"
-                className='mb-3'
-              />
-            </Form.Group>
-          </Row>
-          <Row className='my-3'>
-            <Form.Group as={Col} controlId="formGridRarity">
-              <label htmlFor='searchByRarity'>Rareté</label>
-              <Select
-                closeMenuOnSelect={false}
-                onChange={onInputRarityChange}
-                isMulti
-                options={rariryList}
-                isClearable
-                isSearchable
-                name="searchByRarity"
-                id='searchByRarity'
-              />
-            </Form.Group>
-
-            <Form.Group as={Col} controlId="formGridColors" className='d-flex align-items-end'>
-              <Row className={`${style.groupeColor}`}>
-                { manaObject.map((color) => (
-                    <Col 
-                      key={color.name} 
-                      onClick={(e) => addAFilter(e,'color',color.name)}
-                      className={`btn btn__mana ${filters.colors.includes(color.name) && style.btnActive}` }
-                    >
-                      {color.component}
-                    </Col>
-                  ))
-                }
-              </Row>
-            </Form.Group>
-          </Row>
-      </Form.Group>
-    </Form>
+    <form className={style.form}>
+      <div className={style.row}>
+        <div
+          className={`${styleForm.inputGroup} ${style.groupe}`}>
+          <label htmlFor='searchByName'>Nom de la carte</label>
+          <AsyncSelect
+            onChange={onInputNameChange}
+            loadOptions={searchCardName}
+            isClearable
+            isSearchable
+            name='searchByName'
+            id='searchByName'
+            styles={colorStyles}
+          />
+        </div>
+        <div
+          className={`${styleForm.inputGroup} ${style.groupe}`}>
+          <label
+            htmlFor='description'
+          >
+          Search in description
+          </label>
+          <input 
+            className={styleForm.inputText}
+            type='text' 
+            id='description'
+            placeholder='Exemple : +1/+1'
+            onChange={(e) => addAFilter(e,'oracle',e.target.value)}
+            />
+        </div>
+        <div
+          className={`${styleForm.inputGroup} ${style.groupe}`}>
+          <label htmlFor='searchBytypes'>Type de carte</label>
+          <Select
+            closeMenuOnSelect={false}
+            onChange={onInputTypeChange}
+            isMulti
+            options={typeList}
+            isClearable
+            isSearchable
+            id='searchBytypes'
+            name="searchBytypes"
+            styles={colorStyles}
+          />
+        </div>
+      </div>
+      <div className={style.row}>
+      <div
+          className={`${styleForm.inputGroup} ${style.groupe}`}>
+          <label htmlFor='searchByRarity'>Rareté</label>
+          <Select
+            closeMenuOnSelect={false}
+            onChange={onInputRarityChange}
+            isMulti
+            options={rariryList}
+            isClearable
+            isSearchable
+            styles={colorStyles}
+            name="searchByRarity"
+            id='searchByRarity'
+          />
+        </div>
+        <div
+          className={`${styleForm.inputGroup} ${style.groupe}`}>
+          <label>Colors</label>
+            <div
+            className={`${style.groupeColor}`}
+            >
+            { manaObject.map((color) => (
+                  <div 
+                    key={color.name} 
+                    onClick={(e) => addAFilter(e,'color',color.name)}
+                    className={`${filters.colors.includes(color.name) ? style.btnActive : ''}` }
+                  >
+                    {color.component}
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+      </div>
+    </form>
   )
 }
 

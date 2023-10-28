@@ -1,17 +1,28 @@
-import React from 'react'
+import React, { useContext }from 'react'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faUser } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import NavBarUI from './NavBarUI'
-import { Col } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import style from './Header.module.css'
+import { ModalContext } from '../contexts/modalContext'
+import globalStyles from '../utils/styles/global.module.css'
+
+library.add(faUser)
 
 function Header() {
+  const { toggleModals } = useContext(ModalContext)
   return (
-    <Col xs={1} className={`${style.headerContainer} bg-dark d-flex flex-column justify-content-center`}>
-      <header>
-        <div>
-          <NavBarUI />
+    <header className={`${style.headerContainer}`}>
+      <div className={`${style.navContainer}`}>
+        <div className={`${globalStyles.linkContainer} ${style.linkAccount}`}>
+          <Link onClick={() => toggleModals("signIn")} className={`${globalStyles.link}`}>
+            <FontAwesomeIcon icon="fa-solid fa-user" />
+          </Link>
         </div>
-      </header>
-    </Col>
+        <NavBarUI />
+      </div>
+    </header>
   )
 }
 

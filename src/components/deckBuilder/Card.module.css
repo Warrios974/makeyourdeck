@@ -21,14 +21,16 @@
 }
 
 .singleCardContainer > img{
-    max-width: 215px;
-    width: 215px;
     transform: scale(1);
     transition: transform 0.3s ease;
 }
 
 .singleCardContainer:hover > img{
     transform: scale(1.24);
+}
+
+.images{
+    border-radius: .6rem;
 }
 
 /* // =============== Add in deck ============================== */
@@ -102,11 +104,86 @@
     position: relative;
     
 }
+
+.cardContainerListed > div{
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    border-radius: 40px;
+    background-color: #00160B;
+    border: 1px solid #898989;
+    padding-left: 3rem;
+    padding-right: 1rem;
+    margin: 1rem 0;
+}
+
+.cardContainerListed > div > span:first-of-type{
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: #FFF;
+    color: #000;
+    line-height: 40px;
+    text-align: center;
+    border-radius: 40px;
+    width: 40px;
+    height: 40px;
+    font-weight: 700;
+}
+
+.cardContainerListed > div > span:nth-child(2){
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 60%;
+}
+
 .cardContainerListed:hover > img{
     display: inline;
 }
+
 .cardContainerListed > img{
     display: none;
     position: absolute;
-    left: -379px;
+    top: 0;
+    left: -350px;
+    width: 350px;
+}
+
+.cardContainerListed > div > .addOrRemoveLayoutList{
+    display: none;
+    height: 40px;
+}
+
+.cardContainerListed:hover > div > .addOrRemoveLayoutList{
+    display: block;
+}
+
+.show {
+    animation: sideBarTranslationLeft 500ms ease both;
+}
+
+.hidden {
+    animation: sideBarTranslationRigth 500ms ease both;
+}
+
+@keyframes sideBarTranslationRigth {
+    0%{
+        transform: translateX(0);
+    }
+    100%{
+        transform: translateX(379px);
+    }
+}
+
+@keyframes sideBarTranslationLeft {
+    0%{
+        transform: translateX(500px);
+    }
+    100%{
+        transform: translateX(0);
+    }
 }

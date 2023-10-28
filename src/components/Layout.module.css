@@ -1,4 +1,18 @@
 .mainContainer{
-    margin-left: 5rem;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.764);
+    color: white;
+    min-height: 100vh;
+    background-image:linear-gradient(0deg, rgba(0, 0, 0, 0.869) 54%, rgba(0, 0, 0, 0.436) 100%), url(http://localhost:3000/assets/background/261841.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.mainSection{
+    width: 100%;
+    margin-top: 3rem ;
+    padding: 0 6rem;
     max-width: 1280px;
 }

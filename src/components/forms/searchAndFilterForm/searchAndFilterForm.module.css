@@ -1,12 +1,48 @@
-.groupeColor{
-    
+.form{
+    width: 100%;
 }
 
-.groupeColor svg{
+.row{
+    display: flex;
+    justify-content: space-between;
+    gap: 1%;
+    width: 100%;
+}
+
+.groupe{
+    width: 32%;
+}
+
+.groupeColor{
+    display: flex;
+    justify-content: space-around;
+    background-color: #000;
+    border-radius: 40px;
+    padding: .6rem .4rem;
+}
+
+.groupeColor > div > svg{
     width: 1.4rem;
     height: 1.4rem;
 }
 
+.groupeColor > div{
+    cursor: pointer;
+}
+
 .btnActive{
-    border: red 5px solid;
+    position: relative;
+}
+
+.btnActive::before{
+    content: '';
+    display: block;
+    position: absolute;
+    top: -1px;
+    left: -4px;
+    background-color: transparent;
+    border: 4px solid #ff8c00;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 40px;
 }

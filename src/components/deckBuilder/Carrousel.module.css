@@ -1,6 +1,9 @@
 .carrouselContainer{
     overflow-x: scroll;
     overflow-y: auto;
+    background-color: #000;
+    border-radius: 1rem;
+    margin-top: 2rem;
 }
 
 .ligneContainer{

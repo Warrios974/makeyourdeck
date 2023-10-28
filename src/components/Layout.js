@@ -1,5 +1,4 @@
 import React from 'react'
-import { Row } from 'react-bootstrap'
 import Header from './Header'
 import SignInModal from './SignInModal'
 import { Route, Routes } from 'react-router-dom'
@@ -11,11 +10,10 @@ import CardInfos from './CardInfos'
 
 function Layout() {
   return (
-    <Row className='justify-content-center'>
-      <Header />
-      <main className={`${style.mainContainer} col-9 position-relative`}>
+      <main className={style.mainContainer}>
+        <Header />
         <SignInModal />
-        <section className="col mx-4 my-5">
+        <section className={style.mainSection}>
           <Routes>
             <Route path="/" element={ <Home /> } />
             <Route path="/decks" element={ <Decks /> } />
@@ -24,7 +22,6 @@ function Layout() {
           <CardInfos />
         </section>
       </main>
-    </Row>
   )
 }
 

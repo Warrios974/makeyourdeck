@@ -8,9 +8,25 @@
 }
 
 .sidebarContainer .mainContainer {
-    background-color: white;
+    background: #000;
+    color: #FFF;
     height: 100%;
     width: 379px;
+}
+
+.cardsContainer {
+    padding: 1em;
+}
+
+.cardsContainer > h3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cardsContainer > h3 > span {
+    font-size: 12px;
+    color: #8c8c8c;
 }
 
 .open {

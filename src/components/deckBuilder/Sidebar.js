@@ -47,7 +47,7 @@ function Sidebar() {
           { !modalState.sideBarDeck && <button onClick={() => toggleModals('sideBarDeck')} > open </button>}
         </div>
           <div className={`${style.mainContainer}`}>
-            {commander !== null && <div className="">
+            {commander !== null && <div className={style.cardsContainer}>
               <h3>Commander zone</h3>
               { (commander.length > 0) && commander.map((card) => (
                 card.id && 
@@ -60,8 +60,8 @@ function Sidebar() {
               { commander.length === 0 && <span>Aucune carte de commander</span> }
             </div>}
             
-            <div className="">
-              <h3>Main deck zone { mainDeckCurrentCards && <span>{mainDeckCurrentCards + "/" + mainDeckTotalCards}</span> }</h3>
+            <div className={style.cardsContainer}>
+              <h3>Main deck zone { mainDeckCurrentCards !== null  && <span>{mainDeckCurrentCards + "/" + mainDeckTotalCards}</span> }</h3>
               { (mainDeck.length > 0) && mainDeck.map((card) => (
                 card.id && 
                   <Card
@@ -73,8 +73,8 @@ function Sidebar() {
               { mainDeck.length === 0 && <span>Aucune carte dans votre deck</span> }
             </div>
 
-            {reserve !== null && <div className="">
-              <h3>Reserve zone { reserveCurrentCards && <span>{reserveCurrentCards + "/" + reserveTotalCards}</span> }</h3>
+            {reserve !== null && <div className={style.cardsContainer}>
+              <h3>Reserve zone { reserveCurrentCards !== null && <span>{reserveCurrentCards}/{reserveTotalCards}</span> }</h3>
               { (reserve.length > 0) && reserve.map((card) => (
                 card.id && 
                   <Card

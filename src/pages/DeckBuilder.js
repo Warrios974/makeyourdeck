@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from 'react'
-import { Row } from 'react-bootstrap'
 import BannerDeck from '../components/deckBuilder/BannerDeck'
 import Carrousel from '../components/deckBuilder/Carrousel'
 import DeckSection from '../components/deckBuilder/DeckSection'
